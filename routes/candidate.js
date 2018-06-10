@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('../db');
 
 const router = express.Router();
-const requiredProperties = ["name", "category_id"];
+const requiredProperties = ["name", "party_id", "date_of_birth"];
 
 // Create
 router.post('/', (req, res) => {
@@ -14,7 +14,9 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.topic ("name", category_id) VALUES (${name}, ${category_id}) RETURNING *', req.body)
+    // req.body.website_url = req.body.website_url || null;
+
+    db.one('INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url) VALUES (${name}, ${party_id}, ${date_of_birth}, ${website_url}) RETURNING *', req.body)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -31,7 +33,7 @@ router.post('/', (req, res) => {
 
 // View all
 router.get('/', (req, res) => {
-    db.any('SELECT * FROM voterapp.topic')
+    db.any('SELECT * FROM voterapp.candidate')
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -48,7 +50,7 @@ router.get('/', (req, res) => {
 
 // View
 router.get('/:id', (req, res) => {
-    db.one('SELECT * FROM voterapp.topic WHERE id = ${id}', {
+    db.one('SELECT * FROM voterapp.candidate WHERE id = ${id}', {
         id: req.params.id
     })
     .then(function (data) {
@@ -75,9 +77,11 @@ router.patch('/:id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.topic SET "name" = ${name}, category_id = ${category_id} WHERE id = ${id} RETURNING *', {
+    db.one('UPDATE voterapp.candidate SET "name" = ${name}, party_id = ${party_id}, date_of_birth = ${date_of_birth}, website_url = ${website_url} WHERE id = ${id} RETURNING *', {
         name: req.body.name,
-        category_id: req.body.category_id,
+        party_id: req.body.party_id,
+        date_of_birth: req.body.date_of_birth,
+        website_url: req.body.website_url,
         id: req.params.id
     })
     .then(function (data) {
@@ -96,7 +100,7 @@ router.patch('/:id', (req, res) => {
 
 // Delete
 router.delete('/:id', (req, res) => {
-    db.result('DELETE FROM voterapp.topic WHERE id = ${id}', {
+    db.result('DELETE FROM voterapp.issue WHERE id = ${id}', {
         id: req.params.id
     })
     .then(function (data) {

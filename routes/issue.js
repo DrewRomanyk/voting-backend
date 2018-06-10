@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('../db');
 
 const router = express.Router();
-const requiredProperties = ["name", "category_id"];
+const requiredProperties = ["name", "topic_id"];
 
 // Create
 router.post('/', (req, res) => {
@@ -14,7 +14,7 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.topic ("name", category_id) VALUES (${name}, ${category_id}) RETURNING *', req.body)
+    db.one('INSERT INTO voterapp.issue ("name", topic_id) VALUES (${name}, ${topic_id}) RETURNING *', req.body)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
 
 // View all
 router.get('/', (req, res) => {
-    db.any('SELECT * FROM voterapp.topic')
+    db.any('SELECT * FROM voterapp.issue')
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
 
 // View
 router.get('/:id', (req, res) => {
-    db.one('SELECT * FROM voterapp.topic WHERE id = ${id}', {
+    db.one('SELECT * FROM voterapp.issue WHERE id = ${id}', {
         id: req.params.id
     })
     .then(function (data) {
@@ -75,9 +75,9 @@ router.patch('/:id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.topic SET "name" = ${name}, category_id = ${category_id} WHERE id = ${id} RETURNING *', {
+    db.one('UPDATE voterapp.issue SET "name" = ${name}, topic_id = ${topic_id} WHERE id = ${id} RETURNING *', {
         name: req.body.name,
-        category_id: req.body.category_id,
+        topic_id: req.body.topic_id,
         id: req.params.id
     })
     .then(function (data) {
@@ -96,7 +96,7 @@ router.patch('/:id', (req, res) => {
 
 // Delete
 router.delete('/:id', (req, res) => {
-    db.result('DELETE FROM voterapp.topic WHERE id = ${id}', {
+    db.result('DELETE FROM voterapp.issue WHERE id = ${id}', {
         id: req.params.id
     })
     .then(function (data) {

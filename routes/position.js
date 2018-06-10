@@ -2,11 +2,12 @@ const express = require('express');
 const db = require('../db');
 
 const router = express.Router();
-const requiredProperties = ["name", "category_id"];
+const requiredProperties = ["current_position", "confidence"];
+const requiredCreateProperties = ["candidate_id", "issue_id"].concat(requiredProperties);
 
 // Create
 router.post('/', (req, res) => {
-    if (!requiredProperties.every(prop => { return prop in req.body; })) {
+    if (!requiredCreateProperties.every(prop => { return prop in req.body; })) {
         res.status(400).send({
             status: 'ERROR',
             result: 'required fields are empty!'
@@ -14,7 +15,7 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.topic ("name", category_id) VALUES (${name}, ${category_id}) RETURNING *', req.body)
+    db.one('INSERT INTO voterapp.position (candidate_id, issue_id, current_position, confidence) VALUES (${candidate_id}, ${issue_id}, ${current_position}, ${confidence}) RETURNING *', req.body)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -31,7 +32,7 @@ router.post('/', (req, res) => {
 
 // View all
 router.get('/', (req, res) => {
-    db.any('SELECT * FROM voterapp.topic')
+    db.any('SELECT * FROM voterapp.position')
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -47,10 +48,8 @@ router.get('/', (req, res) => {
 });
 
 // View
-router.get('/:id', (req, res) => {
-    db.one('SELECT * FROM voterapp.topic WHERE id = ${id}', {
-        id: req.params.id
-    })
+router.get('/:candidate_id/:issue_id', (req, res) => {
+    db.one('SELECT * FROM voterapp.position WHERE candidate_id = ${candidate_id} AND issue_id = ${issue_id}', req.params)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -66,7 +65,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Update
-router.patch('/:id', (req, res) => {
+router.patch('/:candidate_id/:issue_id', (req, res) => {
     if (!requiredProperties.every(prop => { return prop in req.body; })) {
         res.status(400).send({
             status: 'ERROR',
@@ -75,10 +74,11 @@ router.patch('/:id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.topic SET "name" = ${name}, category_id = ${category_id} WHERE id = ${id} RETURNING *', {
-        name: req.body.name,
-        category_id: req.body.category_id,
-        id: req.params.id
+    db.one('UPDATE voterapp.position SET current_position = ${current_position}, confidence = ${confidence} WHERE candidate_id = ${candidate_id} AND issue_id = ${issue_id} RETURNING *', {
+        current_position: req.body.current_position,
+        confidence: req.body.confidence,
+        candidate_id: req.params.candidate_id,
+        issue_id: req.params.issue_id
     })
     .then(function (data) {
         res.status(200).send({
@@ -95,10 +95,8 @@ router.patch('/:id', (req, res) => {
 });
 
 // Delete
-router.delete('/:id', (req, res) => {
-    db.result('DELETE FROM voterapp.topic WHERE id = ${id}', {
-        id: req.params.id
-    })
+router.delete('/:candidate_id/:issue_id', (req, res) => {
+    db.result('DELETE FROM voterapp.position WHERE candidate_id = ${candidate_id} AND issue_id = ${issue_id}', req.params)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',

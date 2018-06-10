@@ -2,10 +2,11 @@ const express = require('express');
 const db = require('../db');
 
 const router = express.Router();
+const requiredProperties = ["name"];
 
 // Create
 router.post('/', (req, res) => {
-    if (!req.body.name) {
+    if (!requiredProperties.every(prop => { return prop in req.body; })) {
         res.status(400).send({
             status: 'ERROR',
             result: 'required fields are empty!'
@@ -66,7 +67,7 @@ router.get('/:id', (req, res) => {
 
 // Update
 router.patch('/:id', (req, res) => {
-    if (!req.body.name) {
+    if (!requiredProperties.every(prop => { return prop in req.body; })) {
         res.status(400).send({
             status: 'ERROR',
             result: 'required fields are empty!'

@@ -3,8 +3,13 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 
 const db = require('./db');
-const category_router = require('./routes/category');
-const topic_router = require('./routes/topic');
+const categoryRouter = require('./routes/category');
+const topicRouter = require('./routes/topic');
+const issueRouter = require('./routes/issue');
+const candidateRouter = require('./routes/candidate');
+const candidateTopicPositionRouter = require('./routes/candidateTopicPosition');
+const positionRouter = require('./routes/position');
+const partyRouter = require('./routes/party');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,8 +31,13 @@ db.one('SELECT $1 AS value', 1234)
         console.log('Database connection failed:', error);
     });
 
-app.use('/api/category', category_router);
-app.use('/api/topic', topic_router);
+app.use('/api/category', categoryRouter);
+app.use('/api/topic', topicRouter);
+app.use('/api/issue', issueRouter);
+app.use('/api/candidate', candidateRouter);
+app.use('/api/cand_topic_pos', candidateTopicPositionRouter);
+app.use('/api/position', positionRouter);
+app.use('/api/party', partyRouter);
 
 app.listen(port, error => {
     if (error) {
