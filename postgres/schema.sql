@@ -106,6 +106,15 @@ CREATE TABLE voterapp.user (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE voterapp.preferences (
+    "user_id" uuid NOT NULL,
+    timezone TEXT NOT NULL DEFAULT 'America/New_York',
+    "address" TEXT,
+    email_update BOOLEAN NOT NULL DEFAULT FALSE,
+
+    PRIMARY KEY ("user_id")
+);
+
 ALTER TABLE voterapp.category ADD CONSTRAINT category_submit_user_fk FOREIGN KEY (submit_user_id) REFERENCES voterapp.user (id);
 ALTER TABLE voterapp.topic ADD CONSTRAINT topic_category_fk FOREIGN KEY (category_id) REFERENCES voterapp.category (id);
 ALTER TABLE voterapp.topic ADD CONSTRAINT topic_submit_user_fk FOREIGN KEY (submit_user_id) REFERENCES voterapp.user (id);
@@ -119,6 +128,7 @@ ALTER TABLE voterapp.position ADD CONSTRAINT position_candidate_fk FOREIGN KEY (
 ALTER TABLE voterapp.position ADD CONSTRAINT position_issue_fk FOREIGN KEY (issue_id) REFERENCES voterapp.issue (id);
 ALTER TABLE voterapp.position ADD CONSTRAINT position_submit_user_fk FOREIGN KEY (submit_user_id) REFERENCES voterapp.user (id);
 ALTER TABLE voterapp.party ADD CONSTRAINT party_submit_user_fk FOREIGN KEY (submit_user_id) REFERENCES voterapp.user (id);
+ALTER TABLE voterapp.preferences ADD CONSTRAINT preferences_user_fk FOREIGN KEY ("user_id") REFERENCES voterapp.user (id);
 
 /* Initializing data */
 INSERT INTO voterapp.user (email, username, "password") VALUES ('drewiswaycool@gmail.com', 'drewiswaycool', 'password');
