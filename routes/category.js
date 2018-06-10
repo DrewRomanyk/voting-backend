@@ -13,7 +13,9 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.category ("name") VALUES ($1) RETURNING *', [req.body.name])
+    db.one('INSERT INTO voterapp.category ("name") VALUES (${name}) RETURNING *', {
+        name: req.body.name
+    })
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -30,7 +32,7 @@ router.post('/', (req, res) => {
 
 // View all
 router.get('/', (req, res) => {
-    db.many('SELECT * FROM voterapp.category', [req.params.id])
+    db.many('SELECT * FROM voterapp.category')
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -47,7 +49,9 @@ router.get('/', (req, res) => {
 
 // View
 router.post('/:id', (req, res) => {
-    db.one('SELECT * FROM voterapp.category WHERE id = $1', [req.params.id])
+    db.one('SELECT * FROM voterapp.category WHERE id = ${id}', {
+        id: req.params.id
+    })
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -72,7 +76,10 @@ router.patch('/:id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.category SET "name" = $1 WHERE id = $2 RETURNING *', [req.body.name, req.params.id])
+    db.one('UPDATE voterapp.category SET "name" = ${name} WHERE id = ${id} RETURNING *', {
+        name: req.body.name, 
+        id: req.params.id
+    })
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -89,7 +96,9 @@ router.patch('/:id', (req, res) => {
 
 // Delete
 router.delete('/:id', (req, res) => {
-    db.none('DELETE FROM voterapp.category WHERE id = $1', [req.params.id])
+    db.result('DELETE FROM voterapp.category WHERE id = ${id}', {
+        id: req.params.id
+    })
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
