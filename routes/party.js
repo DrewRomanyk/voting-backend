@@ -2,11 +2,16 @@ const express = require('express');
 const db = require('../db');
 
 const router = express.Router();
-const requiredProperties = ["name"];
+const requiredProperties = ["name", "submit_status"];
+const requiredCreateProperties = ["submit_user_id", "submit_timezone"].concat(requiredProperties);
 
 // Create
 router.post('/', (req, res) => {
-    if (!requiredProperties.every(prop => { return prop in req.body; })) {
+    // TODO remove defaults
+    req.body.submit_status = 0;
+    req.body.submit_user_id = '42';
+    req.body.submit_timezone = 'America/New_York';
+    if (!requiredCreateProperties.every(prop => { return prop in req.body; })) {
         res.status(400).send({
             status: 'ERROR',
             result: 'required fields are empty!'
@@ -14,7 +19,7 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.party ("name") VALUES (${name}) RETURNING *', req.body)
+    db.one('INSERT INTO voterapp.party ("name", submit_status, submit_user_id, submit_timezone) VALUES (${name}, ${submit_status}, ${submit_user_id}, ${submit_timezone}) RETURNING *', req.body)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -75,8 +80,9 @@ router.patch('/:id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.party SET "name" = ${name} WHERE id = ${id} RETURNING *', {
+    db.one('UPDATE voterapp.party SET "name" = ${name}, submit_status = ${submit_status} WHERE id = ${id} RETURNING *', {
         name: req.body.name,
+        submit_status: req.body.submit_status,
         id: req.params.id
     })
     .then(function (data) {
