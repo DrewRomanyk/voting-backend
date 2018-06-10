@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.candidate_topic_position (candidate_id, topic_id, "name", score) VALUES (${candidate_id}, ${topic_id}, ${name}, ${score}) RETURNING *', req.body)
+    db.one('INSERT INTO voterapp.topic_summary (candidate_id, topic_id, "name", score) VALUES (${candidate_id}, ${topic_id}, ${name}, ${score}) RETURNING *', req.body)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -32,7 +32,7 @@ router.post('/', (req, res) => {
 
 // View all
 router.get('/', (req, res) => {
-    db.any('SELECT * FROM voterapp.candidate_topic_position')
+    db.any('SELECT * FROM voterapp.topic_summary')
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -49,7 +49,7 @@ router.get('/', (req, res) => {
 
 // View
 router.get('/:candidate_id/:topic_id', (req, res) => {
-    db.one('SELECT * FROM voterapp.candidate_topic_position WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}', req.params)
+    db.one('SELECT * FROM voterapp.topic_summary WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}', req.params)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -74,7 +74,7 @@ router.patch('/:candidate_id/:topic_id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.candidate_topic_position SET "name" = ${name}, score = ${score} WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id} RETURNING *', {
+    db.one('UPDATE voterapp.topic_summary SET "name" = ${name}, score = ${score} WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id} RETURNING *', {
         name: req.body.name,
         score: req.body.score,
         candidate_id: req.params.candidate_id,
@@ -96,7 +96,7 @@ router.patch('/:candidate_id/:topic_id', (req, res) => {
 
 // Delete
 router.delete('/:candidate_id/:topic_id', (req, res) => {
-    db.result('DELETE FROM voterapp.candidate_topic_position WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}', req.params)
+    db.result('DELETE FROM voterapp.topic_summary WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}', req.params)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',

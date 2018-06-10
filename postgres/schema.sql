@@ -34,7 +34,7 @@ CREATE TABLE voterapp.candidate (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE voterapp.candidate_topic_position (
+CREATE TABLE voterapp.topic_summary (
     candidate_id uuid NOT NULL,
     topic_id uuid NOT NULL,
     "name" TEXT NOT NULL,
@@ -57,8 +57,8 @@ CREATE TABLE voterapp.party (
 );
 
 ALTER TABLE voterapp.candidate ADD CONSTRAINT candidate_party_fk FOREIGN KEY (party_id) REFERENCES voterapp.party (id);
-ALTER TABLE voterapp.candidate_topic_position ADD CONSTRAINT candidate_topic_pos_candidate_fk FOREIGN KEY (candidate_id) REFERENCES voterapp.candidate (id);
-ALTER TABLE voterapp.candidate_topic_position ADD CONSTRAINT candidate_topic_pos_topic_fk FOREIGN KEY (topic_id) REFERENCES voterapp.topic (id);
+ALTER TABLE voterapp.topic_summary ADD CONSTRAINT topic_summary_candidate_fk FOREIGN KEY (candidate_id) REFERENCES voterapp.candidate (id);
+ALTER TABLE voterapp.topic_summary ADD CONSTRAINT topic_summary_topic_fk FOREIGN KEY (topic_id) REFERENCES voterapp.topic (id);
 ALTER TABLE voterapp.issue ADD CONSTRAINT issue_topic_fk FOREIGN KEY (topic_id) REFERENCES voterapp.topic (id);
 ALTER TABLE voterapp.position ADD CONSTRAINT position_candidate_fk FOREIGN KEY (candidate_id) REFERENCES voterapp.candidate (id);
 ALTER TABLE voterapp.position ADD CONSTRAINT position_issue_fk FOREIGN KEY (issue_id) REFERENCES voterapp.issue (id);
