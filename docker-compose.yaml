@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/var/www/app:rw
+      - /var/www/app/node_modules
+    ports:
+      - "3000:3000"
+    command: npm run start:dev
+    links:
+      - postgres
+  
+  postgres:
+    build: ./postgres
+    volumes_from:
+      - data
+    ports:
+      - "5432:5432"
+  
+  data:
+    image: tianon/true
+    volumes:
+      - /var/lib/postgresql
