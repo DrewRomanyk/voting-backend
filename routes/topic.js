@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Create
 router.post('/', (req, res) => {
-    if (!req.body.name) {
+    if (!req.body.name || !req.body.category_id) {
         res.status(400).send({
             status: 'ERROR',
             result: 'required fields are empty!'
@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
         return;
     }
 
-    db.one('INSERT INTO voterapp.category ("name") VALUES (${name}) RETURNING *', req.body)
+    db.one('INSERT INTO voterapp.topic ("name", category_id) VALUES (${name}, ${category_id}) RETURNING *', req.body)
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 
 // View all
 router.get('/', (req, res) => {
-    db.any('SELECT * FROM voterapp.category')
+    db.any('SELECT * FROM voterapp.topic')
     .then(function (data) {
         res.status(200).send({
             status: 'OK',
@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
 
 // View
 router.get('/:id', (req, res) => {
-    db.one('SELECT * FROM voterapp.category WHERE id = ${id}', {
+    db.one('SELECT * FROM voterapp.topic WHERE id = ${id}', {
         id: req.params.id
     })
     .then(function (data) {
@@ -66,7 +66,7 @@ router.get('/:id', (req, res) => {
 
 // Update
 router.patch('/:id', (req, res) => {
-    if (!req.body.name) {
+    if (!req.body.name || !req.body.category_id) {
         res.status(400).send({
             status: 'ERROR',
             result: 'required fields are empty!'
@@ -74,8 +74,9 @@ router.patch('/:id', (req, res) => {
         return;
     }
 
-    db.one('UPDATE voterapp.category SET "name" = ${name} WHERE id = ${id} RETURNING *', {
+    db.one('UPDATE voterapp.topic SET "name" = ${name}, category_id = ${category_id} WHERE id = ${id} RETURNING *', {
         name: req.body.name,
+        category_id: req.body.category_id,
         id: req.params.id
     })
     .then(function (data) {
@@ -94,7 +95,7 @@ router.patch('/:id', (req, res) => {
 
 // Delete
 router.delete('/:id', (req, res) => {
-    db.result('DELETE FROM voterapp.category WHERE id = ${id}', {
+    db.result('DELETE FROM voterapp.topic WHERE id = ${id}', {
         id: req.params.id
     })
     .then(function (data) {

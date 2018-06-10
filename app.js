@@ -1,8 +1,10 @@
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+
 const db = require('./db');
 const category_router = require('./routes/category');
+const topic_router = require('./routes/topic');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -25,6 +27,7 @@ db.one('SELECT $1 AS value', 1234)
     });
 
 app.use('/api/category', category_router);
+app.use('/api/topic', topic_router);
 
 app.listen(port, error => {
     if (error) {
