@@ -10,6 +10,7 @@ const candidateRouter = require('./routes/candidate');
 const topicSummaryRouter = require('./routes/topicSummary');
 const positionRouter = require('./routes/position');
 const partyRouter = require('./routes/party');
+const userRouter = require('./routes/user');
 
 // Setup app
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/candidate', candidateRouter);
 app.use('/api/topic_summary', topicSummaryRouter);
 app.use('/api/position', positionRouter);
 app.use('/api/party', partyRouter);
+app.use('/api/user', userRouter);
 
 // Start app
 app.listen(port, error => {

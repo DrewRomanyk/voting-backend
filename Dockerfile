@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM node:10.4.1
 
 WORKDIR /var/www/app
 
