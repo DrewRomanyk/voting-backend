@@ -50,50 +50,50 @@ router.post('/', (req, res) => {
 });
 
 
-function autherize(req, res, next) {
-    // check header or url parameters or post parameters for token
+function authorize(req, res, next) {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-    if (token) {
-        jwt.verify(token, config.jwt.secret, (error, decoded) => {      
-            if (error) {
-                res.status(400).send({
-                    status: 'ERROR',
-                    message: 'Invalid token',
-                    result: error
-                });
-            } else {
-                db.one('SELECT session_hash FROM voterapp.user WHERE id = ${id}', decoded)
-                .then(data => {
-                    if (data.session_hash == decoded.session_hash) {
-                        req.decoded = decoded;
-                        next();
-                    } else {
-                        res.status(400).send({
-                            status: 'ERROR',
-                            message: 'Invalid token session',
-                            result: error
-                        });
-                    }
-                })
-                .catch(error => {
-                    res.status(400).send({
-                        status: 'ERROR',
-                        message: 'DB error',
-                        result: error
-                    });
-                });
-            }
-        });
-    } else {
+    if (!token) {
         res.status(400).send({
             status: 'ERROR',
-            result: 'No Token bruh'
+            result: 'No token given'
         });
+        return;
     }
+
+    jwt.verify(token, config.jwt.secret, (error, jwtData) => {      
+        if (error) {
+            res.status(400).send({
+                status: 'ERROR',
+                message: 'Invalid token',
+                result: error
+            });
+        } else {
+            db.one('SELECT session_hash FROM voterapp.user WHERE id = ${id}', jwtData)
+            .then(data => {
+                if (data.session_hash == jwtData.session_hash) {
+                    req.decoded = jwtData;
+                    next();
+                } else {
+                    res.status(400).send({
+                        status: 'ERROR',
+                        message: 'Invalid token session',
+                        result: error
+                    });
+                }
+            })
+            .catch(error => {
+                res.status(400).send({
+                    status: 'ERROR',
+                    message: 'DB error',
+                    result: error
+                });
+            });
+        }
+    });
 }
 
 module.exports = {
     router: router,
-    autherize: autherize
+    authorize: authorize
 };

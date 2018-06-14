@@ -43,7 +43,7 @@ app.use(BASE_URL + '/candidate', candidateRouter);
 app.use(BASE_URL + '/topic_summary', topicSummaryRouter);
 app.use(BASE_URL + '/position', positionRouter);
 app.use(BASE_URL + '/party', partyRouter);
-app.use(BASE_URL + '/user', auth.autherize, userRouter);
+app.use(BASE_URL + '/user', auth.authorize, userRouter);
 
 // Start app
 app.listen(port, error => {
