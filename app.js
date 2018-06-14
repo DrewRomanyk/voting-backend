@@ -3,6 +3,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 
 const db = require('./db');
+const auth = require('./routes/auth');
 const categoryRouter = require('./routes/category');
 const topicRouter = require('./routes/topic');
 const issueRouter = require('./routes/issue');
@@ -30,17 +31,19 @@ db.one('SELECT $1 AS value', 1234)
     });
 
 // Routes
-app.get('/', (req, res) => res.status(200).send({
+const BASE_URL = '/api';
+app.get(BASE_URL, (req, res) => res.status(200).send({
     status: 'Welcome to the Voting Backend!'
 }));
-app.use('/api/category', categoryRouter);
-app.use('/api/topic', topicRouter);
-app.use('/api/issue', issueRouter);
-app.use('/api/candidate', candidateRouter);
-app.use('/api/topic_summary', topicSummaryRouter);
-app.use('/api/position', positionRouter);
-app.use('/api/party', partyRouter);
-app.use('/api/user', userRouter);
+app.use(BASE_URL + '/auth', auth.router);
+app.use(BASE_URL + '/category', categoryRouter);
+app.use(BASE_URL + '/topic', topicRouter);
+app.use(BASE_URL + '/issue', issueRouter);
+app.use(BASE_URL + '/candidate', candidateRouter);
+app.use(BASE_URL + '/topic_summary', topicSummaryRouter);
+app.use(BASE_URL + '/position', positionRouter);
+app.use(BASE_URL + '/party', partyRouter);
+app.use(BASE_URL + '/user', auth.autherize, userRouter);
 
 // Start app
 app.listen(port, error => {

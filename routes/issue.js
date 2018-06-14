@@ -20,13 +20,13 @@ router.post('/', (req, res) => {
     }
 
     db.one('INSERT INTO voterapp.issue ("name", topic_id, submit_status, submit_user_id, submit_timezone) VALUES (${name}, ${topic_id}, ${submit_status}, ${submit_user_id}, ${submit_timezone}) RETURNING *', req.body)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -37,13 +37,13 @@ router.post('/', (req, res) => {
 // View all
 router.get('/', (req, res) => {
     db.any('SELECT * FROM voterapp.issue')
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -56,13 +56,13 @@ router.get('/:id', (req, res) => {
     db.one('SELECT * FROM voterapp.issue WHERE id = ${id}', {
         id: req.params.id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -86,13 +86,13 @@ router.patch('/:id', (req, res) => {
         submit_status: req.body.submit_status,
         id: req.params.id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -105,13 +105,13 @@ router.delete('/:id', (req, res) => {
     db.result('DELETE FROM voterapp.issue WHERE id = ${id}', {
         id: req.params.id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error

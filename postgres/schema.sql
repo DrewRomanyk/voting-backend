@@ -102,6 +102,15 @@ CREATE TABLE voterapp.user (
     email TEXT NOT NULL UNIQUE,
     username TEXT NOT NULL UNIQUE,
     "password" TEXT NOT NULL,
+    role_id uuid NOT NULL,
+    session_hash TEXT NOT NULL,
+
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE voterapp.role (
+    id uuid DEFAULT gen_random_uuid(),
+    "name" TEXT NOT NULL UNIQUE,
 
     PRIMARY KEY (id)
 );
@@ -128,10 +137,13 @@ ALTER TABLE voterapp.position ADD CONSTRAINT position_candidate_fk FOREIGN KEY (
 ALTER TABLE voterapp.position ADD CONSTRAINT position_issue_fk FOREIGN KEY (issue_id) REFERENCES voterapp.issue (id);
 ALTER TABLE voterapp.position ADD CONSTRAINT position_submit_user_fk FOREIGN KEY (submit_user_id) REFERENCES voterapp.user (id);
 ALTER TABLE voterapp.party ADD CONSTRAINT party_submit_user_fk FOREIGN KEY (submit_user_id) REFERENCES voterapp.user (id);
+ALTER TABLE voterapp.user ADD CONSTRAINT user_role_fk FOREIGN KEY (role_id) REFERENCES voterapp.role (id);
 ALTER TABLE voterapp.preferences ADD CONSTRAINT preferences_user_fk FOREIGN KEY ("user_id") REFERENCES voterapp.user (id);
 
 /* Initializing data */
-INSERT INTO voterapp.user (email, username, "password") VALUES ('drewiswaycool@gmail.com', 'drewiswaycool', 'password');
+INSERT INTO voterapp.role ("name") VALUES ('User');
+INSERT INTO voterapp.role ("name") VALUES ('Admin');
+INSERT INTO voterapp.user (email, username, "password", session_hash, role_id) VALUES ('drewiswaycool@gmail.com', 'drewiswaycool', 'PASSWORD_HASH_HERE', 'SESSION_HASH_HERE', (SELECT id FROM voterapp.role WHERE "name" = 'Admin'));
 INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Social', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
 INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Foreign', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
 INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Immigration', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');

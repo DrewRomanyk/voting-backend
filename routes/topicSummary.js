@@ -16,13 +16,13 @@ router.post('/', (req, res) => {
     }
 
     db.one('INSERT INTO voterapp.topic_summary (candidate_id, topic_id, "name", score) VALUES (${candidate_id}, ${topic_id}, ${name}, ${score}) RETURNING *', req.body)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -33,13 +33,13 @@ router.post('/', (req, res) => {
 // View all
 router.get('/', (req, res) => {
     db.any('SELECT * FROM voterapp.topic_summary')
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -50,13 +50,13 @@ router.get('/', (req, res) => {
 // View
 router.get('/:candidate_id/:topic_id', (req, res) => {
     db.one('SELECT * FROM voterapp.topic_summary WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}', req.params)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -80,13 +80,13 @@ router.patch('/:candidate_id/:topic_id', (req, res) => {
         candidate_id: req.params.candidate_id,
         topic_id: req.params.topic_id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -97,13 +97,13 @@ router.patch('/:candidate_id/:topic_id', (req, res) => {
 // Delete
 router.delete('/:candidate_id/:topic_id', (req, res) => {
     db.result('DELETE FROM voterapp.topic_summary WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}', req.params)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error

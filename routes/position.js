@@ -20,13 +20,13 @@ router.post('/', (req, res) => {
     }
 
     db.one('INSERT INTO voterapp.position (candidate_id, issue_id, current_position, confidence, source_quote, source_date, source_date, submit_status, submit_user_id, submit_timezone) VALUES (${candidate_id}, ${issue_id}, ${current_position}, ${confidence}, ${source_url}, ${source_quote}, ${source_date}, ${submit_status}, ${submit_user_id}, ${submit_timezone}) RETURNING *', req.body)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -37,13 +37,13 @@ router.post('/', (req, res) => {
 // View all
 router.get('/', (req, res) => {
     db.any('SELECT * FROM voterapp.position')
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -54,13 +54,13 @@ router.get('/', (req, res) => {
 // View
 router.get('/:candidate_id/:issue_id', (req, res) => {
     db.one('SELECT * FROM voterapp.position WHERE candidate_id = ${candidate_id} AND issue_id = ${issue_id}', req.params)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -88,13 +88,13 @@ router.patch('/:candidate_id/:issue_id', (req, res) => {
         candidate_id: req.params.candidate_id,
         issue_id: req.params.issue_id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -105,13 +105,13 @@ router.patch('/:candidate_id/:issue_id', (req, res) => {
 // Delete
 router.delete('/:candidate_id/:issue_id', (req, res) => {
     db.result('DELETE FROM voterapp.position WHERE candidate_id = ${candidate_id} AND issue_id = ${issue_id}', req.params)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error

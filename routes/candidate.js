@@ -22,13 +22,13 @@ router.post('/', (req, res) => {
     // req.body.website_url = req.body.website_url || null;
 
     db.one('INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_timezone) VALUES (${name}, ${party_id}, ${date_of_birth}, ${website_url}, ${submit_status}, ${submit_user_id}, ${submit_timezone}) RETURNING *', req.body)
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -39,13 +39,13 @@ router.post('/', (req, res) => {
 // View all
 router.get('/', (req, res) => {
     db.any('SELECT * FROM voterapp.candidate')
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -58,13 +58,13 @@ router.get('/:id', (req, res) => {
     db.one('SELECT * FROM voterapp.candidate WHERE id = ${id}', {
         id: req.params.id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -90,13 +90,13 @@ router.patch('/:id', (req, res) => {
         submit_status: req.body.submit_status,
         id: req.params.id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
@@ -109,13 +109,13 @@ router.delete('/:id', (req, res) => {
     db.result('DELETE FROM voterapp.issue WHERE id = ${id}', {
         id: req.params.id
     })
-    .then(function (data) {
+    .then(data => {
         res.status(200).send({
             status: 'OK',
             result: data
         });
     })
-    .catch(function (error) {
+    .catch(error => {
         res.status(400).send({
             status: 'ERROR',
             result: error
