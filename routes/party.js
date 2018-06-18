@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const db = require("../db");
 
@@ -23,7 +22,7 @@ router.post("/", (req, res) => {
     }
 
     db.one(
-        'INSERT INTO voterapp.party ("name", submit_status, submit_user_id, submit_timezone) VALUES (${name}, ${submit_status}, ${submit_user_id}, ${submit_timezone}) RETURNING *',
+        'INSERT INTO voterapp.party ("name", submit_status, submit_user_id, submit_timezone) VALUES ($<name>, $<submit_status>, $<submit_user_id>, $<submit_timezone>) RETURNING *',
         req.body
     )
         .then(data => {
@@ -59,7 +58,7 @@ router.get("/", (req, res) => {
 
 // View
 router.get("/:id", (req, res) => {
-    db.one("SELECT * FROM voterapp.party WHERE id = ${id}", {
+    db.one("SELECT * FROM voterapp.party WHERE id = $<id>", {
         id: req.params.id
     })
         .then(data => {
@@ -87,7 +86,7 @@ router.patch("/:id", (req, res) => {
     }
 
     db.one(
-        'UPDATE voterapp.party SET "name" = ${name}, submit_status = ${submit_status} WHERE id = ${id} RETURNING *',
+        'UPDATE voterapp.party SET "name" = $<name>, submit_status = $<submit_status> WHERE id = $<id> RETURNING *',
         {
             name: req.body.name,
             submit_status: req.body.submit_status,
@@ -110,7 +109,7 @@ router.patch("/:id", (req, res) => {
 
 // Delete
 router.delete("/:id", (req, res) => {
-    db.result("DELETE FROM voterapp.party WHERE id = ${id}", {
+    db.result("DELETE FROM voterapp.party WHERE id = $<id>", {
         id: req.params.id
     })
         .then(data => {

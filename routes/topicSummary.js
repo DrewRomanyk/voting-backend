@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const db = require("../db");
 
@@ -19,7 +18,7 @@ router.post("/", (req, res) => {
     }
 
     db.one(
-        'INSERT INTO voterapp.topic_summary (candidate_id, topic_id, "name", score) VALUES (${candidate_id}, ${topic_id}, ${name}, ${score}) RETURNING *',
+        'INSERT INTO voterapp.topic_summary (candidate_id, topic_id, "name", score) VALUES ($<candidate_id>, $<topic_id>, $<name>, $<score>) RETURNING *',
         req.body
     )
         .then(data => {
@@ -56,7 +55,7 @@ router.get("/", (req, res) => {
 // View
 router.get("/:candidate_id/:topic_id", (req, res) => {
     db.one(
-        "SELECT * FROM voterapp.topic_summary WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}",
+        "SELECT * FROM voterapp.topic_summary WHERE candidate_id = $<candidate_id> AND topic_id = $<topic_id>",
         req.params
     )
         .then(data => {
@@ -84,7 +83,7 @@ router.patch("/:candidate_id/:topic_id", (req, res) => {
     }
 
     db.one(
-        'UPDATE voterapp.topic_summary SET "name" = ${name}, score = ${score} WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id} RETURNING *',
+        'UPDATE voterapp.topic_summary SET "name" = $<name>, score = $<score> WHERE candidate_id = $<candidate_id> AND topic_id = $<topic_id> RETURNING *',
         {
             name: req.body.name,
             score: req.body.score,
@@ -109,7 +108,7 @@ router.patch("/:candidate_id/:topic_id", (req, res) => {
 // Delete
 router.delete("/:candidate_id/:topic_id", (req, res) => {
     db.result(
-        "DELETE FROM voterapp.topic_summary WHERE candidate_id = ${candidate_id} AND topic_id = ${topic_id}",
+        "DELETE FROM voterapp.topic_summary WHERE candidate_id = $<candidate_id> AND topic_id = $<topic_id>",
         req.params
     )
         .then(data => {

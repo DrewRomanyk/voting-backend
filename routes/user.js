@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const argon2 = require("argon2");
 const crypto = require("crypto");
@@ -28,7 +27,7 @@ router.post("/", (req, res) => {
         .toString("hex");
 
     db.one(
-        'INSERT INTO voterapp.user (email, username, "password", session_hash) VALUES (${email}, ${username}, ${password}, ${session_hash}) RETURNING id, email, username, role_id',
+        'INSERT INTO voterapp.user (email, username, "password", session_hash) VALUES ($<email>, $<username>, $<password>, $<session_hash>) RETURNING id, email, username, role_id',
         req.body
     )
         .then(data => {
@@ -65,7 +64,7 @@ router.get("/", (req, res) => {
 // View
 router.get("/:id", (req, res) => {
     db.one(
-        "SELECT id, email, username, role_id FROM voterapp.user WHERE id = ${id}",
+        "SELECT id, email, username, role_id FROM voterapp.user WHERE id = $<id>",
         {
             id: req.params.id
         }
@@ -103,7 +102,7 @@ router.patch("/:id", (req, res) => {
         .hash(req.body.password)
         .then(hash => {
             db.one(
-                'UPDATE voterapp.user SET email = ${email}, username = ${username}, "password" = ${password}, session_hash = ${session_hash} WHERE id = ${id} RETURNING id, email, username, role_id',
+                'UPDATE voterapp.user SET email = $<email>, username = $<username>, "password" = $<password>, session_hash = $<session_hash> WHERE id = $<id> RETURNING id, email, username, role_id',
                 {
                     email: req.body.email,
                     username: req.body.username,
@@ -135,7 +134,7 @@ router.patch("/:id", (req, res) => {
 
 // Delete
 router.delete("/:id", (req, res) => {
-    db.result("DELETE FROM voterapp.user WHERE id = ${id}", {
+    db.result("DELETE FROM voterapp.user WHERE id = $<id>", {
         id: req.params.id
     })
         .then(data => {

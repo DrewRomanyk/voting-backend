@@ -24,9 +24,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Ensure DB is connected
 db.one("SELECT $1 AS value", 1234)
     .then(data => {
+        /* eslint-disable-next-line no-console */
         console.log("Database connection success:", data);
     })
     .catch(error => {
+        /* eslint-disable-next-line no-console */
         console.log("Database connection failed:", error);
     });
 
@@ -50,8 +52,10 @@ app.use(`${BASE_URL}/user`, auth.authorize, userRouter);
 // Start app
 app.listen(port, error => {
     if (error) {
+        /* eslint-disable-next-line no-console */
         console.error(error);
     } else {
+        /* eslint-disable-next-line no-console */
         console.log(`Server started on port ${port}`);
     }
 });

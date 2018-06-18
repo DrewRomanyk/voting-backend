@@ -30,10 +30,10 @@
     "pretest": "eslint --ignore-path .gitignore ."
   },
   "lint-staged": {
-      "*.js": [
-          "npm run pretty",
-          "git add"
-      ]
+    "*.js": [
+      "npm run pretty",
+      "git add"
+    ]
   },
   "author": "Drew Romanyk",
   "license": "ISC"

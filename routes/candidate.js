@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const db = require("../db");
 
@@ -30,7 +29,7 @@ router.post("/", (req, res) => {
     // req.body.website_url = req.body.website_url || null;
 
     db.one(
-        'INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_timezone) VALUES (${name}, ${party_id}, ${date_of_birth}, ${website_url}, ${submit_status}, ${submit_user_id}, ${submit_timezone}) RETURNING *',
+        'INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_timezone) VALUES ($<name>, $<party_id>, $<date_of_birth>, $<website_url>, $<submit_status>, $<submit_user_id>, $<submit_timezone>) RETURNING *',
         req.body
     )
         .then(data => {
@@ -66,7 +65,7 @@ router.get("/", (req, res) => {
 
 // View
 router.get("/:id", (req, res) => {
-    db.one("SELECT * FROM voterapp.candidate WHERE id = ${id}", {
+    db.one("SELECT * FROM voterapp.candidate WHERE id = $<id>", {
         id: req.params.id
     })
         .then(data => {
@@ -94,7 +93,7 @@ router.patch("/:id", (req, res) => {
     }
 
     db.one(
-        'UPDATE voterapp.candidate SET "name" = ${name}, party_id = ${party_id}, date_of_birth = ${date_of_birth}, website_url = ${website_url}, submit_status = ${submit_status} WHERE id = ${id} RETURNING *',
+        'UPDATE voterapp.candidate SET "name" = $<name>, party_id = $<party_id>, date_of_birth = $<date_of_birth>, website_url = $<website_url>, submit_status = $<submit_status> WHERE id = $<id> RETURNING *',
         {
             name: req.body.name,
             party_id: req.body.party_id,
@@ -120,7 +119,7 @@ router.patch("/:id", (req, res) => {
 
 // Delete
 router.delete("/:id", (req, res) => {
-    db.result("DELETE FROM voterapp.issue WHERE id = ${id}", {
+    db.result("DELETE FROM voterapp.issue WHERE id = $<id>", {
         id: req.params.id
     })
         .then(data => {

@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const argon2 = require("argon2");
@@ -9,7 +8,7 @@ const config = require("../config");
 const router = express.Router();
 
 router.post("/", (req, res) => {
-    db.one("SELECT * FROM voterapp.user WHERE username = ${username}", {
+    db.one("SELECT * FROM voterapp.user WHERE username = $<username>", {
         username: req.body.username
     })
         .then(data => {
@@ -33,7 +32,7 @@ router.post("/", (req, res) => {
                         res.status(400).send({
                             status: "ERROR",
                             message: "Wrong password",
-                            result: error // Where is the error coming from
+                            result: null
                         });
                     }
                 })
@@ -78,7 +77,7 @@ function authorize(req, res, next) {
             });
         } else {
             db.one(
-                "SELECT session_hash FROM voterapp.user WHERE id = ${id}",
+                "SELECT session_hash FROM voterapp.user WHERE id = $<id>",
                 jwtData
             )
                 .then(data => {
