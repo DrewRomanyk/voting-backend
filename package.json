@@ -26,7 +26,8 @@
     "start:dev": "nodemon app",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretty": "prettier --write --tab-width 4 \"**/*.js\"",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "pretest": "eslint --ignore-path .gitignore ."
   },
   "lint-staged": {
       "*.js": [

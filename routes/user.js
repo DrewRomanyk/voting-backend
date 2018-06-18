@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const argon2 = require("argon2");
 const crypto = require("crypto");
@@ -12,9 +13,7 @@ const SESSION_HASH_LENGTH = 20;
 // Create
 router.post("/", (req, res) => {
     if (
-        !requiredProperties.every(prop => {
-            return prop in req.body;
-        }) ||
+        !requiredProperties.every(prop => prop in req.body) ||
         req.body.password.length > PASSWORD_MAX_LENGTH
     ) {
         res.status(400).send({
@@ -88,9 +87,7 @@ router.get("/:id", (req, res) => {
 // Update
 router.patch("/:id", (req, res) => {
     if (
-        !requiredProperties.every(prop => {
-            return prop in req.body;
-        }) ||
+        !requiredProperties.every(prop => prop in req.body) ||
         req.body.password.length > PASSWORD_MAX_LENGTH
     ) {
         res.status(400).send({
@@ -100,7 +97,7 @@ router.patch("/:id", (req, res) => {
         return;
     }
 
-    session_hash = crypto.randomBytes(SESSION_HASH_LENGTH).toString("hex");
+    const sessionHash = crypto.randomBytes(SESSION_HASH_LENGTH).toString("hex");
 
     argon2
         .hash(req.body.password)
@@ -111,7 +108,7 @@ router.patch("/:id", (req, res) => {
                     email: req.body.email,
                     username: req.body.username,
                     password: hash,
-                    session_hash: session_hash,
+                    session_hash: sessionHash,
                     id: req.params.id
                 }
             )

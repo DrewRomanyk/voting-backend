@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const db = require("../db");
 
@@ -18,11 +19,7 @@ router.post("/", (req, res) => {
     req.body.submit_status = 0;
     req.body.submit_user_id = "42";
     req.body.submit_timezone = "America/New_York";
-    if (
-        !requiredCreateProperties.every(prop => {
-            return prop in req.body;
-        })
-    ) {
+    if (!requiredCreateProperties.every(prop => prop in req.body)) {
         res.status(400).send({
             status: "ERROR",
             result: "required fields are empty!"
@@ -88,11 +85,7 @@ router.get("/:id", (req, res) => {
 
 // Update
 router.patch("/:id", (req, res) => {
-    if (
-        !requiredProperties.every(prop => {
-            return prop in req.body;
-        })
-    ) {
+    if (!requiredProperties.every(prop => prop in req.body)) {
         res.status(400).send({
             status: "ERROR",
             result: "required fields are empty!"

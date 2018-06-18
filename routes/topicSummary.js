@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 const express = require("express");
 const db = require("../db");
 
@@ -9,11 +10,7 @@ const requiredCreateProperties = ["candidate_id", "topic_id"].concat(
 
 // Create
 router.post("/", (req, res) => {
-    if (
-        !requiredCreateProperties.every(prop => {
-            return prop in req.body;
-        })
-    ) {
+    if (!requiredCreateProperties.every(prop => prop in req.body)) {
         res.status(400).send({
             status: "ERROR",
             result: "required fields are empty!"
@@ -78,11 +75,7 @@ router.get("/:candidate_id/:topic_id", (req, res) => {
 
 // Update
 router.patch("/:candidate_id/:topic_id", (req, res) => {
-    if (
-        !requiredProperties.every(prop => {
-            return prop in req.body;
-        })
-    ) {
+    if (!requiredProperties.every(prop => prop in req.body)) {
         res.status(400).send({
             status: "ERROR",
             result: "required fields are empty!"
