@@ -24,6 +24,7 @@ router.post("/", (req, res) => {
                         const token = jwt.sign(payload, config.jwt.secret, {
                             expiresIn: "24h"
                         });
+                        res.cookie("auth-token", token);
                         res.status(200).send({
                             status: "OK",
                             result: token
@@ -32,7 +33,7 @@ router.post("/", (req, res) => {
                         res.status(400).send({
                             status: "ERROR",
                             message: "Wrong password",
-                            result: error // Where is the erro coming from
+                            result: error // Where is the error coming from
                         });
                     }
                 })
@@ -55,7 +56,10 @@ router.post("/", (req, res) => {
 
 function authorize(req, res, next) {
     const token =
-        req.body.token || req.query.token || req.headers["x-access-token"];
+        req.body.token ||
+        req.query.token ||
+        req.headers["x-access-token"] ||
+        req.cookies["auth-token"];
 
     if (!token) {
         res.status(400).send({
