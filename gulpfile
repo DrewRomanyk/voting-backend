@@ -1,0 +1,22 @@
+// tslint:disable
+const gulp = require("gulp");
+const nodemon = require('gulp-nodemon');
+const ts = require("gulp-typescript");
+
+const tsProject = ts.createProject("tsconfig.json");
+
+gulp.task("compile-ts", () => {
+    const tsResult = tsProject.src().pipe(tsProject());
+    return tsResult.js.pipe(gulp.dest("build"));
+});
+
+gulp.task("start", () => {
+    nodemon({
+        script: "./build/index.js",
+        ext: "js",
+    });
+
+    gulp.watch(["./**/*.ts"], ["compile-ts"]);
+});
+
+gulp.task("default", ["start"]);

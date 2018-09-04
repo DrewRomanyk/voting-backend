@@ -5,6 +5,7 @@
 
 # secrets
 config.js
+config.ts
 postgres/Dockerfile
 
 # testing

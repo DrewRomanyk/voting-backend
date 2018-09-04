@@ -1,54 +1,54 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const argon2 = require("argon2");
+import * as argon2 from "argon2";
+import * as express from "express";
+import * as jwt from "jsonwebtoken";
 
-const db = require("../db");
-const config = require("../config");
+import config from "../config";
+import db from "../db";
 
 const router = express.Router();
 
 router.post("/", (req, res) => {
     db.one("SELECT * FROM voterapp.user WHERE username = $<username>", {
-        username: req.body.username
+        username: req.body.username,
     })
-        .then(data => {
+        .then((data) => {
             argon2
                 .verify(data.password, req.body.password)
-                .then(match => {
+                .then((match) => {
                     if (match) {
                         const payload = {
                             id: data.id,
-                            session_hash: data.session_hash
+                            session_hash: data.session_hash,
                         };
                         const token = jwt.sign(payload, config.jwt.secret, {
-                            expiresIn: "24h"
+                            expiresIn: "24h",
                         });
                         res.cookie("auth-token", token);
                         res.status(200).send({
                             status: "OK",
-                            result: token
+                            result: token,
                         });
                     } else {
                         res.status(400).send({
                             status: "ERROR",
                             message: "Wrong password",
-                            result: null
+                            result: null,
                         });
                     }
                 })
-                .catch(error => {
+                .catch((error => {
                     res.status(400).send({
                         status: "ERROR",
                         message: "Verify password error",
-                        result: error
+                        result: error,
                     });
-                });
+                }));
         })
-        .catch(error => {
+        .catch((error) => {
             res.status(400).send({
                 status: "ERROR",
                 message: "DB error",
-                result: error
+                result: error,
             });
         });
 });
@@ -63,7 +63,7 @@ function authorize(req, res, next) {
     if (!token) {
         res.status(400).send({
             status: "ERROR",
-            result: "No token given"
+            result: "No token given",
         });
         return;
     }
@@ -73,14 +73,14 @@ function authorize(req, res, next) {
             res.status(400).send({
                 status: "ERROR",
                 message: "Invalid token",
-                result: error
+                result: error,
             });
         } else {
             db.one(
                 "SELECT session_hash FROM voterapp.user WHERE id = $<id>",
-                jwtData
+                jwtData,
             )
-                .then(data => {
+                .then((data) => {
                     if (data.session_hash === jwtData.session_hash) {
                         req.decoded = jwtData;
                         next();
@@ -88,22 +88,22 @@ function authorize(req, res, next) {
                         res.status(400).send({
                             status: "ERROR",
                             message: "Invalid token session",
-                            result: error
+                            result: error,
                         });
                     }
                 })
-                .catch(dbError => {
+                .catch((dbError) => {
                     res.status(400).send({
                         status: "ERROR",
                         message: "DB error",
-                        result: dbError
+                        result: dbError,
                     });
                 });
         }
     });
 }
 
-module.exports = {
+export default {
     router,
-    authorize
+    authorize,
 };

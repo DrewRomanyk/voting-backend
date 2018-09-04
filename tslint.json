@@ -1,0 +1,14 @@
+{
+    "extends": [
+        "tslint:recommended",
+        "tslint-react"
+    ],
+    "jsRules": {},
+    "rules": {
+        "jsx-boolean-value": false,
+        "object-literal-sort-keys": false,
+        "no-unused-variable": true,
+        "no-unused-parameter": true
+    },
+    "rulesDirectory": [],
+}

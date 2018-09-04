@@ -4,11 +4,23 @@ Backend for the Voting Information App
 
 ## Installation
 
+### Mac
 1. Get [Docker installed](https://store.docker.com/search?type=edition&offering=community)
 2. Switch __*postgres/Dockerfile.template*__ to __*postgres/Dockerfile*__ & alter the secrets for your project
 3. Switch __*config.template.js*__ to __*config.js*__ & alter the secrets for your project
     - Ask developer for or make your own password hash for first user in __*postgres/schema.sql*__
 4. Run ```docker-compose up``` on your terminal for it to build and run, along with auto-magically re-building when you change the code
+
+### Windows
+Sorry that Windows is not UNIX, so we cant do docker :(
+1. npm install --global --production windows-build-tools
+2. Switch __*postgres/Dockerfile.template*__ to __*postgres/Dockerfile*__ & alter the secrets for your project
+3. Switch __*config.template.js*__ to __*config.js*__ & alter the secrets for your project
+    - Ask developer for or make your own password hash for first user in __*postgres/schema.sql*__
+4. install postgres
+5. add postgres as a localhost host in C:\Windows\system32\drivers\etc\hosts
+6. npm install
+7. npm run start:dev
 
 ## TODO
 
