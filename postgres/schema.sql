@@ -12,8 +12,7 @@ CREATE TABLE voterapp.category (
     
     submit_status INT NOT NULL,
     submit_user_id uuid NOT NULL,
-    submit_timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    submit_timezone TEXT NOT NULL,
+    submit_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id)
 );
@@ -25,8 +24,7 @@ CREATE TABLE voterapp.topic (
 
     submit_status INT NOT NULL,
     submit_user_id uuid NOT NULL,
-    submit_timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    submit_timezone TEXT NOT NULL,
+    submit_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id)
 );
@@ -38,8 +36,7 @@ CREATE TABLE voterapp.issue (
 
     submit_status INT NOT NULL,
     submit_user_id uuid NOT NULL,
-    submit_timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    submit_timezone TEXT NOT NULL,
+    submit_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id)
 );
@@ -53,8 +50,7 @@ CREATE TABLE voterapp.candidate (
 
     submit_status INT NOT NULL,
     submit_user_id uuid NOT NULL,
-    submit_timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    submit_timezone TEXT NOT NULL,
+    submit_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id)
 );
@@ -79,8 +75,7 @@ CREATE TABLE voterapp.position (
 
     submit_status INT NOT NULL,
     submit_user_id uuid NOT NULL,
-    submit_timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    submit_timezone TEXT NOT NULL,
+    submit_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (candidate_id, issue_id)
 );
@@ -91,8 +86,7 @@ CREATE TABLE voterapp.party (
 
     submit_status INT NOT NULL,
     submit_user_id uuid NOT NULL,
-    submit_timestamp TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    submit_timezone TEXT NOT NULL,
+    submit_datetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY (id) 
 );
@@ -147,34 +141,34 @@ INSERT INTO voterapp.role ("name") VALUES ('Admin');
 INSERT INTO voterapp.user (email, username, "password", session_hash, role_id) 
                     VALUES ('drewiswaycool@gmail.com', 'drewiswaycool', 'PASSWORD_HASH_HERE', 'SESSION_HASH_HERE', (SELECT id FROM voterapp.role WHERE "name" = 'Admin'));
 
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Social', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Foreign', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Immigration', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Economy', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Environment', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Healthcare', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Guns', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Electoral', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Justice', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.category ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Science', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Social', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Foreign', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Immigration', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Economy', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Environment', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Healthcare', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Guns', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Electoral', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Justice', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.category ("name", submit_status, submit_user_id) VALUES ('Science', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
 
-INSERT INTO voterapp.topic (category_id, "name", submit_status, submit_user_id, submit_timezone) 
-                    VALUES ((SELECT id FROM voterapp.category WHERE "name" = 'Environment'), 'Climate Change', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.topic (category_id, "name", submit_status, submit_user_id) 
+                    VALUES ((SELECT id FROM voterapp.category WHERE "name" = 'Environment'), 'Climate Change', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
 
-INSERT INTO voterapp.issue (topic_id, "name", submit_status, submit_user_id, submit_timezone)
-                    VALUES ((SELECT id FROM voterapp.topic WHERE "name" = 'Climate Change'), 'Increase governmental regulations to prevent climate change', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.issue (topic_id, "name", submit_status, submit_user_id)
+                    VALUES ((SELECT id FROM voterapp.topic WHERE "name" = 'Climate Change'), 'Increase governmental regulations to prevent climate change', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
 
-INSERT INTO voterapp.party ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Independent', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.party ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Democratic', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.party ("name", submit_status, submit_user_id, submit_timezone) VALUES ('Republican', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.party ("name", submit_status, submit_user_id) VALUES ('Independent', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.party ("name", submit_status, submit_user_id) VALUES ('Democratic', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.party ("name", submit_status, submit_user_id) VALUES ('Republican', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
 
-INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_timezone)
-                        VALUES ('Beto O''Rourke', (SELECT id FROM voterapp.party WHERE "name" = 'Democratic'),'1972-09-26', 'https://betofortexas.com/', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
-INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_timezone)
-                        VALUES ('Ted Cruz', (SELECT id FROM voterapp.party WHERE "name" = 'Republican'),'1970-12-22', 'https://www.tedcruz.org/', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id)
+                        VALUES ('Beto O''Rourke', (SELECT id FROM voterapp.party WHERE "name" = 'Democratic'),'1972-09-26', 'https://betofortexas.com/', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
+INSERT INTO voterapp.candidate ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id)
+                        VALUES ('Ted Cruz', (SELECT id FROM voterapp.party WHERE "name" = 'Republican'),'1970-12-22', 'https://www.tedcruz.org/', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
 
-INSERT INTO voterapp.position (candidate_id, issue_id, current_position, confidence, source_url, source_quote, source_date, submit_status, submit_user_id, submit_timezone) 
-                        VALUES ((SELECT id FROM voterapp.candidate WHERE "name" = 'Beto O''Rourke'), (SELECT id FROM voterapp.issue WHERE "name" = 'Increase governmental regulations to prevent climate change'), TRUE, 1.0, 'https://betofortexas.com/issue/energy/', 'Empowering the EPA to exercise oversight of those harming the environment, particularly drilling, fracking, and pipeline construction.', '2017-03-31', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.position (candidate_id, issue_id, current_position, confidence, source_url, source_quote, source_date, submit_status, submit_user_id) 
+                        VALUES ((SELECT id FROM voterapp.candidate WHERE "name" = 'Beto O''Rourke'), (SELECT id FROM voterapp.issue WHERE "name" = 'Increase governmental regulations to prevent climate change'), TRUE, 1.0, 'https://betofortexas.com/issue/energy/', 'Empowering the EPA to exercise oversight of those harming the environment, particularly drilling, fracking, and pipeline construction.', '2017-03-31', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));
 
-INSERT INTO voterapp.position (candidate_id, issue_id, current_position, confidence, source_url, source_quote, source_date, submit_status, submit_user_id, submit_timezone) 
-                        VALUES ((SELECT id FROM voterapp.candidate WHERE "name" = 'Ted Cruz'), (SELECT id FROM voterapp.issue WHERE "name" = 'Increase governmental regulations to prevent climate change'), FALSE, 1.0, 'https://www.bloomberg.com/news/articles/2015-08-03/republicans-climate-change-plan-', '...dismissing the new rules to slash carbon emissions as "radical" or "irresponsible" or "a buzz saw on the nation''s economy."', '2015-08-03', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'), 'America/New_York');
+INSERT INTO voterapp.position (candidate_id, issue_id, current_position, confidence, source_url, source_quote, source_date, submit_status, submit_user_id) 
+                        VALUES ((SELECT id FROM voterapp.candidate WHERE "name" = 'Ted Cruz'), (SELECT id FROM voterapp.issue WHERE "name" = 'Increase governmental regulations to prevent climate change'), FALSE, 1.0, 'https://www.bloomberg.com/news/articles/2015-08-03/republicans-climate-change-plan-', '...dismissing the new rules to slash carbon emissions as "radical" or "irresponsible" or "a buzz saw on the nation''s economy."', '2015-08-03', 0, (SELECT id FROM voterapp.user WHERE username = 'drewiswaycool'));

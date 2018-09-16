@@ -1,16 +1,17 @@
+import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
 import * as bodyParser from "body-parser";
 import * as express from "express";
+import * as jwt from "jsonwebtoken";
 import * as logger from "morgan";
 
-import auth from "./routes/auth";
-import candidateRouter from "./routes/candidate";
-// import categoryRouter from "./routes/category";
-// import issueRouter from "./routes/issue";
-// import partyRouter from "./routes/party";
-// import positionRouter from "./routes/position";
-// import topicRouter from "./routes/topic";
-// import topicSummaryRouter from "./routes/topicSummary";
-// import userRouter from "./routes/user";
+import config from "./config";
+import { IJwtPayload } from "./models/user";
+import resolvers from "./rootResolver";
+import typeDefs from "./rootTypeDefs";
+
+export interface IGraphQlContext {
+    user: IJwtPayload;
+}
 
 class App {
     public express: express.Application;
@@ -19,6 +20,7 @@ class App {
         this.express = express();
         this.middleware();
         this.routes();
+        this.graphql();
     }
 
     private middleware(): void {
@@ -36,21 +38,38 @@ class App {
     }
 
     private routes(): void {
-        const BASE_URL = "/api";
+        const BASE_URL = "/";
         this.express.get(BASE_URL, (_, res) =>
             res.status(200).send({
                 status: "Welcome to the Voting Backend!",
             }),
         );
-        this.express.use(`${BASE_URL}/auth`, auth.router);
-        //this.express.use(`${BASE_URL}/category`, categoryRouter);
-        // this.express.use(`${BASE_URL}/topic`, topicRouter);
-        // this.express.use(`${BASE_URL}/issue`, issueRouter);
-        this.express.use(`${BASE_URL}/candidate`, candidateRouter);
-        // this.express.use(`${BASE_URL}/topic_summary`, topicSummaryRouter);
-        // this.express.use(`${BASE_URL}/position`, positionRouter);
-        // this.express.use(`${BASE_URL}/party`, partyRouter);
-        // this.express.use(`${BASE_URL}/user`, auth.authorize, userRouter);
+    }
+
+    private graphql(): void {
+        const graphQLPath = "/graphql";
+
+        const graphQL = new ApolloServer({
+            schema: makeExecutableSchema({
+                typeDefs,
+                resolvers,
+            }),
+            context: ({req}) => {
+                const token = req.headers.authorization || "";
+                let jwtPayload: IJwtPayload;
+                jwt.verify(token, config.jwt.secret, (_, jwtData) => {
+                    jwtPayload = jwtData;
+                });
+                const context: IGraphQlContext = {
+                    user: jwtPayload,
+                };
+                return context;
+            },
+        });
+        graphQL.applyMiddleware({
+            app: this.express,
+            path: graphQLPath,
+        });
     }
 }
 

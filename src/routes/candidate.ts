@@ -124,7 +124,7 @@ router.patch("/:id", (req, res) => {
 
 // Delete
 router.delete("/:id", (req, res) => {
-    db.result("DELETE FROM voterapp.issue WHERE id = $<id>", {
+    db.result("DELETE FROM voterapp.candidate WHERE id = $<id>", {
         id: req.params.id,
     })
         .then((data) => {

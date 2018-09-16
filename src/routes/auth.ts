@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
                         });
                     }
                 })
-                .catch((error => {
+                .catch(((error) => {
                     res.status(400).send({
                         status: "ERROR",
                         message: "Verify password error",

@@ -22,11 +22,10 @@ Sorry that Windows is not UNIX, so we cant do docker :(
 6. npm install
 7. npm run start:dev
 
-## TODO
+## TODO:
 
 ### API for Frontend
 I essentially need to start building out the frontend, in order to find out what I need for the API calls, as the structure is now built for all of the API calls.
-
 
 ### Performance
 I might not be using promises properly for the db queries or just nodejs code in general.

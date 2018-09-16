@@ -5,5 +5,6 @@ export default {
     },
     jwt: {
         secret: "jwt-secret",
+        session_hash_length: 20,
     },
 };
