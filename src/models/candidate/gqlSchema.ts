@@ -7,8 +7,11 @@ export const typeDefs = gql`
     type Candidate {
         id: ID!
         name: String!
-        dateOfBirth: String!
-        websiteUrl: String
+        date_of_birth: String!
+        website_url: String
+        submit_status: Int!
+        submit_user_id: String!
+        submit_datetime: String!
     }
 
     extend type Query {
@@ -28,6 +31,10 @@ export const resolver: IResolvers = {
         async candidateById(_, { id }, __: IGraphQlContext) {
             try {
                 const candidate = await Candidate.findById(id);
+                console.log(candidate);
+                console.log(typeof candidate.date_of_birth);
+                console.log(Object.keys(candidate.date_of_birth.toString()));
+                console.log(candidate.date_of_birth.toString());
                 return candidate;
             } catch (e) {
                 throw new Error("Failed getting data");

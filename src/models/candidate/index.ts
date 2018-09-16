@@ -12,20 +12,18 @@ export interface IJwtPayload {
 export interface ICandidate {
     id?: string;
     name: string;
-    partyId: string;
-    dateOfBirth: string;
-    websiteUrl?: string;
-    submitStatus: number;
-    submitUserId: string;
-    submitTimestamp: string;
-    submitTimezone: string;
+    party_id: string;
+    date_of_birth: string;
+    website_url?: string;
+    submit_status: number;
+    submit_user_id: string;
+    submit_datetime: string;
 }
 
 export function findAll() {
     return db.any(`
         SELECT
-            id, name, party_id AS partyId, date_of_birth AS dateOfBirth, website_url AS websiteUrl,
-            submit_status AS submitStatus, submit_user_id AS submitUserId, submit_datetime AS submitDatetime
+            id, name, party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_datetime
         FROM voterapp.candidate
     `);
 }
@@ -45,8 +43,7 @@ export function findById(id: string) {
     if (idValidate({ id })) {
         return db.one(`
             SELECT
-                id, name, party_id AS partyId, date_of_birth AS dateOfBirth, website_url AS websiteUrl,
-                submit_status AS submitStatus, submit_user_id AS submitUserId, submit_datetime AS submitDatetime
+                id, name, party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_datetime
             FROM voterapp.candidate WHERE id = $<id>
         `, { id });
     } else {
@@ -101,8 +98,7 @@ export function create(candidate: ICreateCandidate) {
                 ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id)
             VALUES ($<name>, $<partyId>, $<dateOfBirth>, $<websiteUrl>, $<submitStatus>, $<submitUserId>)
             RETURNING
-                id, name, party_id AS partyId, date_of_birth AS dateOfBirth, website_url AS websiteUrl,
-                submit_status AS submitStatus, submit_user_id AS submitUserId, submit_datetime AS submitDatetime
+                id, name, party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_datetime
         `, { ...candidate });
     } else {
         throw new Error("Validation error");
@@ -155,8 +151,7 @@ export function update(candidate: IUpdateCandidate) {
                 website_url = $<websiteUrl>, submit_status = $<submitStatus>, submit_user_id = $<submitUserId>
             WHERE id = $<id>
             RETURNING
-                id, name, party_id AS partyId, date_of_birth AS dateOfBirth, website_url AS websiteUrl,
-                submit_status AS submitStatus, submit_user_id AS submitUserId, submit_datetime AS submitDatetime
+                id, name, party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_datetime
         `, { ...candidate});
     } else {
         throw new Error("Validation error");
