@@ -9,18 +9,20 @@ Backend for the Voting Information App
 2. Switch __*postgres/Dockerfile.template*__ to __*postgres/Dockerfile*__ & alter the secrets for your project
 3. Switch __*config.template.js*__ to __*config.js*__ & alter the secrets for your project
     - Ask developer for or make your own password hash for first user in __*postgres/schema.sql*__
-4. Run ```docker-compose up``` on your terminal for it to build and run, along with auto-magically re-building when you change the code
+4. npm run schema:test
+5. Run ```docker-compose up``` on your terminal for it to build and run, along with auto-magically re-building when you change the code
 
 ### Windows
 Sorry that Windows is not UNIX, so we cant do docker :(
-1. npm install --global --production windows-build-tools
+1. https://github.com/nodejs/node-gyp#on-windows ( install the visual studio build tools with c++ & also install python2.7 )
 2. Switch __*postgres/Dockerfile.template*__ to __*postgres/Dockerfile*__ & alter the secrets for your project
 3. Switch __*config.template.js*__ to __*config.js*__ & alter the secrets for your project
     - Ask developer for or make your own password hash for first user in __*postgres/schema.sql*__
-4. install postgres
-5. add postgres as a localhost host in C:\Windows\system32\drivers\etc\hosts
-6. npm install
-7. npm run start:dev
+4. npm run schema:test & run postgres/schema.sql into your database ( Dont commit secrets to schema.sql! )
+5. install postgres https://www.postgresql.org/download/
+6. add postgres as a localhost host in C:\Windows\system32\drivers\etc\hosts
+7. npm install
+8. npm run start:dev
 
 ## TODO:
 

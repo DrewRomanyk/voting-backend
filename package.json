@@ -12,7 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretty": "prettier --write --tab-width 4 \"**/*.js\"",
     "precommit": "lint-staged",
-    "pretest": "eslint --ignore-path .gitignore ."
+    "pretest": "eslint --ignore-path .gitignore .",
+    "schema:test": "ts-node postgres/generateInitDataSchema.ts"
   },
   "lint-staged": {
     "*.js": [
@@ -27,7 +28,6 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "graphql": "^14.0.2",
-    "graphql-server-express": "^1.4.0",
     "jsonwebtoken": "^8.3.0",
     "morgan": "^1.9.1",
     "nodemon": "^1.18.4",
@@ -46,6 +46,7 @@
     "husky": "^0.14.3",
     "lint-staged": "^7.2.0",
     "prettier": "^1.13.5",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.0.3"
