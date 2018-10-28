@@ -13,7 +13,7 @@
     "pretty": "prettier --write --tab-width 4 \"**/*.js\"",
     "precommit": "lint-staged",
     "pretest": "eslint --ignore-path .gitignore .",
-    "schema:test": "ts-node postgres/generateInitDataSchema.ts"
+    "schema:dev": "ts-node postgres/generateInitDataSchema.ts"
   },
   "lint-staged": {
     "*.js": [

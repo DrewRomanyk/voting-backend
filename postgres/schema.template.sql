@@ -86,15 +86,17 @@ CREATE TABLE voterapp.candidate_submit (
     submit_id uuid NOT NULL,
 
     "name" TEXT NOT NULL,
-    party_id uuid NOT NULL,
+    "description" jsonb NOT NULL,
+    "occupation" jsonb NOT NULL,
+    affiliation_id uuid NOT NULL,
     date_of_birth DATE NOT NULL,
     website_url text,
 
     PRIMARY KEY (id, submit_id)
 );
 
-/* PARTY */
-CREATE TABLE voterapp.party (
+/* AFFILIATION */
+CREATE TABLE voterapp.affiliation (
     id uuid DEFAULT gen_random_uuid(),
 
     current_submit_id uuid NOT NULL,
@@ -102,7 +104,7 @@ CREATE TABLE voterapp.party (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE voterapp.party_submit (
+CREATE TABLE voterapp.affiliation_submit (
     id uuid NOT NULL,
     submit_id uuid NOT NULL,
 
@@ -194,16 +196,16 @@ ALTER TABLE voterapp.candidate_submit ADD CONSTRAINT candidate_submit_candidate_
     REFERENCES voterapp.candidate (id);
 ALTER TABLE voterapp.candidate_submit ADD CONSTRAINT candidate_submit_fk FOREIGN KEY (submit_id)
     REFERENCES voterapp.submit_metadata (id);
-ALTER TABLE voterapp.candidate_submit ADD CONSTRAINT candidate_party_fk FOREIGN KEY (party_id)
-    REFERENCES voterapp.party (id);
+ALTER TABLE voterapp.candidate_submit ADD CONSTRAINT candidate_affiliation_fk FOREIGN KEY (affiliation_id)
+    REFERENCES voterapp.affiliation (id);
 ALTER TABLE voterapp.candidate ADD CONSTRAINT candidate_candidate_fk FOREIGN KEY (current_submit_id)
     REFERENCES voterapp.submit_metadata (id);
 
-ALTER TABLE voterapp.party_submit ADD CONSTRAINT party_submit_party_fk FOREIGN KEY (id)
-    REFERENCES voterapp.party (id);
-ALTER TABLE voterapp.party_submit ADD CONSTRAINT party_submit_submit_fk FOREIGN KEY (submit_id)
+ALTER TABLE voterapp.affiliation_submit ADD CONSTRAINT affiliation_submit_affiliation_fk FOREIGN KEY (id)
+    REFERENCES voterapp.affiliation (id);
+ALTER TABLE voterapp.affiliation_submit ADD CONSTRAINT affiliation_submit_submit_fk FOREIGN KEY (submit_id)
     REFERENCES voterapp.submit_metadata (id);
-ALTER TABLE voterapp.party ADD CONSTRAINT party_party_fk FOREIGN KEY (current_submit_id)
+ALTER TABLE voterapp.affiliation ADD CONSTRAINT affiliation_affiliation_fk FOREIGN KEY (current_submit_id)
     REFERENCES voterapp.submit_metadata (id);
 
 ALTER TABLE voterapp.position_submit ADD CONSTRAINT position_submit_candidate_fk FOREIGN KEY (candidate_id)

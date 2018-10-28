@@ -9,9 +9,6 @@ export const typeDefs = gql`
         name: String!
         date_of_birth: String!
         website_url: String
-        submit_status: Int!
-        submit_user_id: String!
-        submit_datetime: String!
     }
 
     extend type Query {
@@ -46,11 +43,11 @@ export const resolver: IResolvers = {
         },
     },
     Mutation: {
-        async candidateCreate(_, { name, partyId, dateOfBirth, websiteUrl, submitStatus, submitUserId }) {
+        async candidateCreate(_, { name, affiliationId, dateOfBirth, websiteUrl, submitStatus, submitUserId }) {
             try {
                 const candidate = await Candidate.create({
                     name,
-                    partyId,
+                    affiliationId,
                     dateOfBirth,
                     websiteUrl,
                     submitStatus,
@@ -61,12 +58,12 @@ export const resolver: IResolvers = {
                 throw new Error("Failed at creating candidate");
             }
         },
-        async candidateUpdate(_, { id, name, partyId, dateOfBirth, websiteUrl, submitStatus, submitUserId }) {
+        async candidateUpdate(_, { id, name, affiliationId, dateOfBirth, websiteUrl, submitStatus, submitUserId }) {
             try {
                 const candidate = await Candidate.update({
                     id,
                     name,
-                    partyId,
+                    affiliationId,
                     dateOfBirth,
                     websiteUrl,
                     submitStatus,

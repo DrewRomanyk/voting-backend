@@ -8,23 +8,23 @@ let initDataContent: string = "";
 const roles = ["Admin", "User"];
 const categories = ["Social", "Immigration", "Economy", "Environment", "Healthcare", "Guns", "Electoral", "Justice",
     "Science"];
-const parties = ["Independent", "Democratic", "Republican"];
+const affiliations = ["Independent", "Democratic", "Republican"];
 
 roles.forEach((role) => {
-    initDataContent = initDataContent.concat(`INSERT INTO voterapp.role ("name") VALUES ('${role}');\n`);
+    initDataContent = initDataContent.concat(/*sql*/`INSERT INTO voterapp.role ("name") VALUES ('${role}');\n`);
 });
 
-initDataContent = initDataContent.concat(`INSERT INTO voterapp.user (email, username, "password", session_hash, role_id)
+initDataContent = initDataContent.concat(/*sql*/`INSERT INTO voterapp.user (email, username, "password", session_hash, role_id)
     VALUES ('${config.db.practice_user_email}', '${config.db.practice_username}', '${config.db.practice_user_hash}',
         'SESSION_HASH_HERE', (SELECT id FROM voterapp.role WHERE "name" = '${roles[0]}'));\n`,
 );
 
-initDataContent = initDataContent.concat(`INSERT INTO voterapp.submit_metadata (submit_status, submit_user_id)
+initDataContent = initDataContent.concat(/*sql*/`INSERT INTO voterapp.submit_metadata (submit_status, submit_user_id)
     VALUES (0, (SELECT id FROM voterapp.user WHERE username = '${config.db.practice_username}'));\n`,
 );
 
 categories.forEach((category) => {
-    initDataContent = initDataContent.concat(`
+    initDataContent = initDataContent.concat(/*sql*/`
 WITH CATEGORY_ID AS (
     INSERT INTO voterapp.category (current_submit_id)
         VALUES ((SELECT id FROM voterapp.submit_metadata))
@@ -37,22 +37,22 @@ INSERT INTO voterapp.category_submit (id, submit_id, name)
 `);
 });
 
-parties.forEach((party) => {
-    initDataContent = initDataContent.concat(`
-WITH PARTY_ID AS (
-    INSERT INTO voterapp.party (current_submit_id)
+affiliations.forEach((affiliation) => {
+    initDataContent = initDataContent.concat(/*sql*/`
+WITH AFFILIATION_ID AS (
+    INSERT INTO voterapp.affiliation (current_submit_id)
         VALUES ((SELECT id FROM voterapp.submit_metadata))
         RETURNING id
 )
-INSERT INTO voterapp.party_submit (id, submit_id, name)
-    VALUES ((SELECT id FROM PARTY_ID),
+INSERT INTO voterapp.affiliation_submit (id, submit_id, name)
+    VALUES ((SELECT id FROM AFFILIATION_ID),
             (SELECT id FROM voterapp.submit_metadata),
-            '{"en-us": "${party}"}');
+            '{"en-us": "${affiliation}"}');
 `);
 });
 
 // Topic
-initDataContent = initDataContent.concat(`
+initDataContent = initDataContent.concat(/*sql*/`
 WITH TOPIC_ID AS (
     INSERT INTO voterapp.topic (current_submit_id)
         VALUES ((SELECT id FROM voterapp.submit_metadata))
@@ -66,7 +66,7 @@ INSERT INTO voterapp.topic_submit (id, submit_id, category_id, name)
 `);
 
 // Issue
-initDataContent = initDataContent.concat(`
+initDataContent = initDataContent.concat(/*sql*/`
 WITH ISSUE_ID AS (
     INSERT INTO voterapp.issue (current_submit_id)
         VALUES ((SELECT id FROM voterapp.submit_metadata))
@@ -79,18 +79,20 @@ INSERT INTO voterapp.issue_submit (id, submit_id, topic_id, name)
             '{"en-us": "Increase governmental regulations to prevent climate change"}');
 `);
 
-initDataContent = initDataContent.concat(`
+initDataContent = initDataContent.concat(/*sql*/`
 WITH SUBMIT_ID AS ((SELECT id FROM voterapp.submit_metadata)),
     CAND_ID AS (
         INSERT INTO voterapp.candidate (current_submit_id)
             VALUES ((SELECT id FROM SUBMIT_ID))
             RETURNING id
     )
-    INSERT INTO voterapp.candidate_submit (id, submit_id, "name", party_id, date_of_birth, website_url)
+    INSERT INTO voterapp.candidate_submit (id, submit_id, "name", "description", "occupation", affiliation_id, date_of_birth, website_url)
         VALUES ((SELECT id FROM CAND_ID),
                 (SELECT id FROM voterapp.submit_metadata),
                 'Beto O''Rourke',
-                (SELECT id FROM voterapp.party_submit WHERE "name"->>'en-us' = 'Democratic'),
+                '{"en-us": "Robert Francis \\"Beto\\" O''Rourke is an American politician and businessman serving as the U.S. Representative for Texas''s 16th congressional district since 2013. He is the nominee of the Democratic Party in the 2018 Texas U.S. Senate race, running against Republican incumbent Ted Cruz."}',
+                '{"en-us": "Member of the U.S. House of Representatives from Texas''s 16th district"}',
+                (SELECT id FROM voterapp.affiliation_submit WHERE "name"->>'en-us' = 'Democratic'),
                 '1972-09-26',
                 'https://betofortexas.com/');
 INSERT INTO voterapp.position_submit
@@ -115,11 +117,13 @@ WITH SUBMIT_ID AS ((SELECT id FROM voterapp.submit_metadata)),
             VALUES ((SELECT id FROM SUBMIT_ID))
             RETURNING id
     )
-    INSERT INTO voterapp.candidate_submit (id, submit_id, "name", party_id, date_of_birth, website_url)
+    INSERT INTO voterapp.candidate_submit (id, submit_id, "name", "description", "occupation", affiliation_id, date_of_birth, website_url)
         VALUES ((SELECT id FROM CAND_ID),
                 (SELECT id FROM voterapp.submit_metadata),
                 'Ted Cruz',
-                (SELECT id FROM voterapp.party_submit WHERE "name"->>'en-us' = 'Republican'),
+                '{"en-us": "Rafael Edward Cruz is an American politician and attorney serving as the junior United States Senator from Texas since 2013. He was a candidate for the Republican nomination for President of the United States in the 2016 election."}',
+                '{"en-us": "United States Senator from Texas"}',
+                (SELECT id FROM voterapp.affiliation_submit WHERE "name"->>'en-us' = 'Republican'),
                 '1970-12-22',
                 'https://www.tedcruz.org/');
 INSERT INTO voterapp.position_submit

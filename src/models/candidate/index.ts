@@ -12,7 +12,7 @@ export interface IJwtPayload {
 export interface ICandidate {
     id?: string;
     name: string;
-    party_id: string;
+    affiliation_id: string;
     date_of_birth: string;
     website_url?: string;
 }
@@ -20,7 +20,7 @@ export interface ICandidate {
 export function findAll() {
     return db.any(/*sql*/`
         SELECT
-            CS.id, CS.name, CS.party_id, CS.date_of_birth, CS.website_url
+            CS.id, CS.name, CS.affiliation_id, CS.date_of_birth, CS.website_url
         FROM voterapp.candidate AS C
         JOIN voterapp.candidate_submit AS CS
         ON C.id = CS.id AND C.current_submit_id = CS.submit_id
@@ -42,7 +42,7 @@ export function findById(id: string) {
     if (idValidate({ id })) {
         return db.one(/*sql*/`
             SELECT
-                CS.id, CS.name, CS.party_id, CS.date_of_birth, CS.website_url
+                CS.id, CS.name, CS.affiliation_id, CS.date_of_birth, CS.website_url
             FROM voterapp.candidate AS C
             JOIN voterapp.candidate_submit AS CS
             ON C.id = CS.id AND C.current_submit_id = CS.submit_id
@@ -55,7 +55,7 @@ export function findById(id: string) {
 
 export interface ICreateCandidate {
     name: string;
-    partyId: string;
+    affiliationId: string;
     dateOfBirth: string;
     websiteUrl?: string;
     submitStatus: number;
