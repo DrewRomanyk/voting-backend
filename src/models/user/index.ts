@@ -33,7 +33,7 @@ const idValidate = ajv().compile({
 
 export function findById(id: string): Promise<IUser> {
     if (idValidate({ id })) {
-        return db.one(`
+        return db.one(/*sql*/`
             SELECT
                 id, email, username, role_id, session_hash, "password"
             FROM voterapp.user WHERE id = $<id>
@@ -57,7 +57,7 @@ const usernameValidate = ajv().compile({
 
 export function findByUsername(username: string): Promise<IUser> {
     if (usernameValidate({ username })) {
-        return db.one(`
+        return db.one(/*sql*/`
             SELECT
                 id, email, username, role_id, session_hash, "password"
             FROM voterapp.user WHERE username = $<username>
@@ -90,7 +90,7 @@ const signupValidate = ajv().compile({
 
 export function signup(email: string, username: string, password: string): Promise<IUser> {
     if (signupValidate({ email, username, password })) {
-        return db.one(`
+        return db.one(/*sql*/`
             INSERT INTO voterapp.user
                 (email, username, "password", session_hash)
             VALUES ($<email>, $<username>, $<password>, $<sessionHash>)
