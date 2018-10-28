@@ -6,11 +6,11 @@ const ts = require("gulp-typescript");
 const tsProject = ts.createProject("tsconfig.json");
 
 gulp.task("compile-ts", () => {
-    const tsResult = tsProject.src().pipe(tsProject());
-    return tsResult.js.pipe(gulp.dest("build"));
+    return compileTs();
 });
 
 gulp.task("start", () => {
+    compileTs();
     nodemon({
         script: "./build/index.js",
         ext: "js",
@@ -20,3 +20,8 @@ gulp.task("start", () => {
 });
 
 gulp.task("default", ["start"]);
+
+function compileTs() {
+    const tsResult = tsProject.src().pipe(tsProject());
+    return tsResult.js.pipe(gulp.dest("build"));
+}
