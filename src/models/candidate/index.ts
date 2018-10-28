@@ -15,16 +15,15 @@ export interface ICandidate {
     party_id: string;
     date_of_birth: string;
     website_url?: string;
-    submit_status: number;
-    submit_user_id: string;
-    submit_datetime: string;
 }
 
 export function findAll() {
-    return db.any(`
+    return db.any(/*sql*/`
         SELECT
-            id, name, party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_datetime
-        FROM voterapp.candidate
+            CS.id, CS.name, CS.party_id, CS.date_of_birth, CS.website_url
+        FROM voterapp.candidate AS C
+        JOIN voterapp.candidate_submit AS CS
+        ON C.id = CS.id AND C.current_submit_id = CS.submit_id
     `);
 }
 
@@ -41,10 +40,13 @@ const idValidate = ajv().compile({
 
 export function findById(id: string) {
     if (idValidate({ id })) {
-        return db.one(`
+        return db.one(/*sql*/`
             SELECT
-                id, name, party_id, date_of_birth, website_url, submit_status, submit_user_id, submit_datetime
-            FROM voterapp.candidate WHERE id = $<id>
+                CS.id, CS.name, CS.party_id, CS.date_of_birth, CS.website_url
+            FROM voterapp.candidate AS C
+            JOIN voterapp.candidate_submit AS CS
+            ON C.id = CS.id AND C.current_submit_id = CS.submit_id
+            WHERE C.id = $<id>
         `, { id });
     } else {
         throw new Error("Validation error");
@@ -93,7 +95,7 @@ const createCandidateValidate = ajv().compile({
 
 export function create(candidate: ICreateCandidate) {
     if (createCandidateValidate(candidate)) {
-        return db.one(`
+        return db.one(/*sql*/`
             INSERT INTO voterapp.candidate
                 ("name", party_id, date_of_birth, website_url, submit_status, submit_user_id)
             VALUES ($<name>, $<partyId>, $<dateOfBirth>, $<websiteUrl>, $<submitStatus>, $<submitUserId>)
@@ -146,7 +148,7 @@ const updateCandidateValidate = ajv().compile({
 
 export function update(candidate: IUpdateCandidate) {
     if (updateCandidateValidate(candidate)) {
-        return db.one(`
+        return db.one(/*sql*/`
             UPDATE voterapp.candidate SET "name" = $<name>, party_id = $<partyId>, date_of_birth = $<dateOfBirth>,
                 website_url = $<websiteUrl>, submit_status = $<submitStatus>, submit_user_id = $<submitUserId>
             WHERE id = $<id>
@@ -160,7 +162,7 @@ export function update(candidate: IUpdateCandidate) {
 
 export function remove(id: string) {
     if (idValidate({ id })) {
-        return db.one(`
+        return db.one(/*sql*/`
             DELETE FROM voterapp.candidate
             WHERE id = $<id>
             RETURNING id

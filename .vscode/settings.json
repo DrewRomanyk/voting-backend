@@ -1,2 +1,34 @@
 {
+    "highlight.regexes": {
+        "(// ?TODO:?)(.*)": [
+            {
+            "overviewRulerColor": "#ffcc00",
+            "backgroundColor": "#ffcc00",
+            "color": "#1f1f1f",
+            "fontWeight": "bold"
+            },
+            {
+            "backgroundColor": "#d9ad00",
+            "color": "#1f1f1f"
+            }
+        ],
+        "(// ?FIXME:?)(.*)": [
+            {
+            "overviewRulerColor": "#ff0000",
+            "backgroundColor": "#ff0000",
+            "color": "#1f1f1f",
+            "fontWeight": "bold"
+            },
+            {
+            "backgroundColor": "#d90000",
+            "color": "#1f1f1f"
+            }
+        ],
+        "(// )(@\\w+)": [
+            {},
+            {
+            "color": "#4de0ff"
+            }
+        ]
+    }
 }
