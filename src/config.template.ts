@@ -4,7 +4,7 @@ export default {
         uri: "postgres://voterapp:voterapp1234@postgres/voterapp",
         practice_user_email: "practice@email.com",
         practice_username: "practice",
-        practice_user_hash: "HASH_GOES_HERE", // Goes to postgres/schema.sql#Initializing data/User/PASSWORD_HASH_HERE
+        practice_user_hash: "HASH_GOES_HERE",
     },
     jwt: {
         secret: "jwt-secret",

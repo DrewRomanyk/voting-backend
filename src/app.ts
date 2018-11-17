@@ -50,6 +50,7 @@ class App {
         const graphQLUriPath = "/graphql";
 
         const graphQL = new ApolloServer({
+            tracing: true,
             schema: makeExecutableSchema({
                 typeDefs,
                 resolvers,
