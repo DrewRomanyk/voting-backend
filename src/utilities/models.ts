@@ -13,3 +13,8 @@ export interface IBase extends IId {
 export interface ILocalizedStrings {
     [key: string]: string;
 }
+
+export interface ILocalizedStringEntry {
+    language: string;
+    value: string;
+}

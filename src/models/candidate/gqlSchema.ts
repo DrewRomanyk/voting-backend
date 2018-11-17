@@ -41,10 +41,10 @@ export const typeDefs = gql`
 
     extend type Mutation {
         candidateCreate(
-            name: String!, description: LocalizedString[], occupation: LocalizedString[], affiliationId: ID!,
+            name: String!, affiliationId: ID!,
             dateOfBirth: String!, websiteUrl: String, submitStatus: String!, submitUserId: ID!): Candidate!
-        candidateSubmit(
-            id: ID!, name: String!, description: LocalizedString[], occupation: LocalizedString[], affiliationId: ID!,
+        candidateSubmit(id: ID!,
+            name: String!, affiliationId: ID!,
             dateOfBirth: String!, websiteUrl: String, submitStatus: String!, submitUserId: ID!): Candidate!
         candidateActivateSubmit(id: ID!, submitId: ID!): Candidate!
         candidateRemove(id: ID!): ID!
@@ -64,6 +64,7 @@ export const resolver: IResolvers = {
     },
     Candidate: {
         async currentSubmit(candidate: IBase, _, __: IGraphQlContext): Promise<Candidate.ICandidateSubmit> {
+            console.log("currentSubmit", candidate);
             return Candidate.getSubmit(candidate.currentSubmitId);
         },
         async submits(candidate: IBase, _, __: IGraphQlContext): Promise<Candidate.ICandidateSubmit[]> {

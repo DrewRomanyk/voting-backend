@@ -6,8 +6,8 @@ import { idValidate } from "../../utilities/validation";
 
 export interface ICandidateSubmit extends ISubmitBase {
     name: string;
-    description: { [key: string]: string };
-    occupation: { [key: string]: string };
+    description: ILocalizedStrings;
+    occupation: ILocalizedStrings;
     affiliationId: string;
     dateOfBirth: string;
     websiteUrl?: string;
@@ -49,7 +49,7 @@ const mutateCandidateValidate = ajv().compile({
 export function getAll(): Promise<IBase[]> {
     return db.manyOrNone<IBase>(/*sql*/`
         SELECT
-            id, current_submit_id AS currentSubmitId
+            id, current_submit_id AS "currentSubmitId"
         FROM voterapp.candidate
     `);
 }
@@ -59,11 +59,14 @@ export function get(id: string): Promise<IBase> {
         if (!idValidate({ id })) { reject("Validation error"); }
         db.one(/*sql*/`
             SELECT
-                id, current_submit_id AS currentSubmitId
+                id, current_submit_id AS "currentSubmitId"
             FROM voterapp.candidate
             WHERE id = $<id>
         `, { id },
-        ).then((value) => resolve(value))
+        ).then((value) => {
+            console.log(value);
+            resolve(value);
+        })
         .catch((error: Error) => reject(error));
     });
 }
@@ -73,9 +76,9 @@ export function getAllSubmitForCandidate(id: string): Promise<ICandidateSubmit[]
         if (!idValidate({ id })) { reject("Validation error"); }
         db.manyOrNone<ICandidateSubmit>(/*sql*/`
             SELECT
-                CS.id, CS.submit_id AS submitId, CS."name", CS."description", CS."occupation",
-                CS.affiliation_id AS affiliationId, CS.date_of_birth AS dateOfBirth, CS.website_url AS websiteUrl,
-                SM.submit_status AS submitStatus, SM.submit_user_id AS submitUserId
+                CS.id, CS.submit_id AS "submitId", CS."name", CS."description", CS."occupation",
+                CS.affiliation_id AS "affiliationId", CS.date_of_birth AS "dateOfBirth", CS.website_url AS "websiteUrl",
+                SM.submit_status AS "submitStatus", SM.submit_user_id AS "submitUserId"
             FROM voterapp.candidate_submit AS CS
             JOIN voterapp.submit_metadata AS SM
             ON CS.submit_id = SM.id
@@ -86,19 +89,19 @@ export function getAllSubmitForCandidate(id: string): Promise<ICandidateSubmit[]
     });
 }
 
-export function getSubmit(submitId: string): Promise<ICandidateSubmit> {
+export function getSubmit(id: string): Promise<ICandidateSubmit> {
     return new Promise<ICandidateSubmit>((resolve, reject) => {
-        if (!idValidate({ submitId })) { reject("Validation error"); }
+        if (!idValidate({ id })) { reject("Validation error"); }
         db.one<ICandidateSubmit>(/*sql*/`
             SELECT
-                CS.id, CS.submit_id AS submitId, CS."name", CS."description", CS."occupation",
-                CS.affiliation_id AS affiliationId, CS.date_of_birth AS dateOfBirth, CS.website_url AS websiteUrl,
-                SM.submit_status AS submitStatus, SM.submit_user_id AS submitUserId
+                CS.id, CS.submit_id AS "submitId", CS."name", CS."description", CS."occupation",
+                CS.affiliation_id AS "affiliationId", CS.date_of_birth AS "dateOfBirth", CS.website_url AS "websiteUrl",
+                SM.submit_status AS "submitStatus", SM.submit_user_id AS "submitUserId"
             FROM voterapp.candidate_submit AS CS
             JOIN voterapp.submit_metadata AS SM
             ON CS.submit_id = SM.id
-            WHERE CS.submit_id = $<submitId>
-        `, { submitId },
+            WHERE CS.submit_id = $<id>
+        `, { id },
         ).then((value) => resolve(value))
         .catch((error: Error) => reject(error));
     });
