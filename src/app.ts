@@ -47,7 +47,7 @@ class App {
     }
 
     private graphql(): void {
-        const graphQLPath = "/graphql";
+        const graphQLUriPath = "/graphql";
 
         const graphQL = new ApolloServer({
             schema: makeExecutableSchema({
@@ -68,7 +68,7 @@ class App {
         });
         graphQL.applyMiddleware({
             app: this.express,
-            path: graphQLPath,
+            path: graphQLUriPath,
         });
     }
 }

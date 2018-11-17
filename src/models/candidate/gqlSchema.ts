@@ -1,6 +1,7 @@
 import { gql, IResolvers } from "apollo-server-express";
 
 import { IGraphQlContext } from "../../app";
+import { IId } from "../../utilities/models";
 import * as Candidate from "./";
 
 export const typeDefs = gql`
@@ -17,70 +18,35 @@ export const typeDefs = gql`
     }
 
     extend type Mutation {
-        candidateCreate(username: String!, password: String!): Candidate!
-        candidateUpdate(email: String!, username: String!, password: String!): Candidate!
+        candidateCreate(name: String!, partyId: ID!, dateOfBirth: String!,
+            websiteUrl: String, submitStatus: String!, submitUserId: ID!): Candidate!
+        candidateUpdate(id: ID, name: String!, partyId: ID!, dateOfBirth: String!,
+            websiteUrl: String, submitStatus: String!, submitUserId: ID!): Candidate!
         candidateRemove(id: String!): ID!
     }
 `;
 
 export const resolver: IResolvers = {
     Query: {
-        async candidateById(_, { id }, __: IGraphQlContext) {
-            try {
-                const candidate = await Candidate.findById(id);
-                return candidate;
-            } catch (e) {
-                throw new Error("Failed getting data");
-            }
+        async candidateById(_, args: IId, __: IGraphQlContext)
+                : Promise<Candidate.ICandidate> {
+            return Candidate.findById(args.id);
         },
-        async candidateAll(_, __, ___: IGraphQlContext) {
-            try {
-                const candidates = await Candidate.findAll();
-                return candidates;
-            } catch (e) {
-                throw new Error("Failed getting data");
-            }
+        async candidateAll(_, __, ___: IGraphQlContext): Promise<Candidate.ICandidate[]> {
+            return Candidate.findAll();
         },
     },
     Mutation: {
-        async candidateCreate(_, { name, affiliationId, dateOfBirth, websiteUrl, submitStatus, submitUserId }) {
-            try {
-                const candidate = await Candidate.create({
-                    name,
-                    affiliationId,
-                    dateOfBirth,
-                    websiteUrl,
-                    submitStatus,
-                    submitUserId,
-                });
-                return candidate;
-            } catch (e) {
-                throw new Error("Failed at creating candidate");
-            }
+        async candidateCreate(_, args: Partial<Candidate.ICandidate>)
+                : Promise<Candidate.ICandidate> {
+            return Candidate.create(args);
         },
-        async candidateUpdate(_, { id, name, affiliationId, dateOfBirth, websiteUrl, submitStatus, submitUserId }) {
-            try {
-                const candidate = await Candidate.update({
-                    id,
-                    name,
-                    affiliationId,
-                    dateOfBirth,
-                    websiteUrl,
-                    submitStatus,
-                    submitUserId,
-                });
-                return candidate;
-            } catch (e) {
-                throw new Error("Failed at updating candidate");
-            }
+        async candidateUpdate(_, args: Candidate.ICandidate)
+                : Promise<Candidate.ICandidate> {
+            return Candidate.update(args);
         },
-        async candidateRemove(_, { id }) {
-            try {
-                await Candidate.remove(id);
-                return id;
-            } catch (e) {
-                throw new Error("Failed at updating candidate");
-            }
+        async candidateRemove(_, args: IId): Promise<string> {
+            return Candidate.remove(args.id);
         },
     },
 };
