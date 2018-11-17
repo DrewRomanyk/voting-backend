@@ -1,4 +1,9 @@
 {
+    "files.associations": {
+        "gulpfile": "javascript",
+        "*ignore": "ignore",
+        "Dockerfile.template": "dockerfile"
+    },
     "highlight.regexes": {
         "(// ?TODO:?)(.*)": [
             {
