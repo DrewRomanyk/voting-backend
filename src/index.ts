@@ -1,16 +1,6 @@
-import app from "./app";
-import db from "./db";
+import chalk from "chalk";
 
-// Ensure DB is connected
-db.one("SELECT $1 AS value", 1234)
-.then((data) => {
-    // tslint:disable-next-line:rule no-console
-    console.log("Database connection success:", data);
-})
-.catch((error) => {
-    // tslint:disable-next-line:rule no-console
-    console.log("Database connection failed:", error);
-});
+import app from "./app";
 
 // Start app
 const port = process.env.PORT || 3000;
@@ -20,6 +10,6 @@ app.listen(port, (error) => {
         console.error(error);
     } else {
         // tslint:disable-next-line:rule no-console
-        console.log(`Server started on port ${port}`);
+        console.log(chalk.greenBright(`Server started on port ${port}`));
     }
 });

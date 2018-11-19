@@ -5,6 +5,11 @@ const ts = require("gulp-typescript");
 
 const tsProject = ts.createProject("tsconfig.json");
 
+function compileTs() {
+    const tsResult = tsProject.src().pipe(tsProject());
+    return tsResult.js.pipe(gulp.dest("build"));
+}
+
 gulp.task("compile-ts", () => {
     return compileTs();
 });
@@ -16,12 +21,7 @@ gulp.task("start", () => {
         ext: "js",
     });
 
-    gulp.watch(["./**/*.ts"], ["compile-ts"]);
+    gulp.watch(["./**/*.ts"], compileTs);
 });
 
-gulp.task("default", ["start"]);
-
-function compileTs() {
-    const tsResult = tsProject.src().pipe(tsProject());
-    return tsResult.js.pipe(gulp.dest("build"));
-}
+gulp.task("default", gulp.series("start"));

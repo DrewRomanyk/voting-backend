@@ -1,11 +1,28 @@
-import * as pgPromise from "pg-promise";
+import chalk from "chalk";
+import { Sequelize } from "sequelize-typescript";
+
 import config from "./config";
 
-const pgp: pgPromise.IMain = pgPromise();
-// Ensures that date & timestamps remain as ISO rather than javascript date
-// https://github.com/brianc/node-pg-types/blob/master/lib/textParsers.js
-pgp.pg.types.setTypeParser(1082, (val) => String(val)); // date
-pgp.pg.types.setTypeParser(1184, (val) => String(val)); // timestamp /w timezone
-const db: pgPromise.IDatabase<any> = pgp(config.db.uri);
+export const createModels = (): Sequelize => {
+    const sequelize = new Sequelize({
+        url: config.db.uri,
+        dialect: "postgres",
+        port: 5432,
+        operatorsAliases: false,
+        timezone: "+00:00",
+        logging: false,
+    });
+    sequelize.addModels([__dirname + "\\models"]);
 
-export default db;
+    sequelize.authenticate()
+    .then(() => {
+        // tslint:disable-next-line:no-console
+        console.log("Database connection:", chalk.greenBright("SUCCESS"));
+    })
+    .catch((error) => {
+        // tslint:disable-next-line:no-console
+        console.log("Database connection:", chalk.redBright("ERROR"), error);
+    });
+
+    return sequelize;
+};

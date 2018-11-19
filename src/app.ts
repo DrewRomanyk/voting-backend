@@ -1,26 +1,21 @@
-import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
 import * as bodyParser from "body-parser";
 import * as express from "express";
-import * as jwt from "jsonwebtoken";
 import * as logger from "morgan";
+import { Sequelize } from "sequelize-typescript";
 
-import config from "./config";
-import { IJwtPayload } from "./models/user";
-import resolvers from "./rootResolver";
-import typeDefs from "./rootTypeDefs";
-
-export interface IGraphQlContext {
-    user: IJwtPayload;
-}
+import userRouter from "./routes/user";
+import { createModels } from "./db";
 
 class App {
     public express: express.Application;
+    public db: Sequelize;
 
     constructor() {
         this.express = express();
+        this.db = createModels();
+        this.db.sync();
         this.middleware();
         this.routes();
-        this.graphql();
     }
 
     private middleware(): void {
@@ -38,39 +33,13 @@ class App {
     }
 
     private routes(): void {
-        const BASE_URL = "/";
+        const BASE_URL = "/api";
         this.express.get(BASE_URL, (_, res) =>
             res.status(200).send({
                 status: "Welcome to the Voting Backend!",
             }),
         );
-    }
-
-    private graphql(): void {
-        const graphQLUriPath = "/graphql";
-
-        const graphQL = new ApolloServer({
-            tracing: true,
-            schema: makeExecutableSchema({
-                typeDefs,
-                resolvers,
-            }),
-            context: ({req}) => {
-                const token = req.headers.authorization || "";
-                let jwtPayload: IJwtPayload;
-                jwt.verify(token, config.jwt.secret, (_, jwtData) => {
-                    jwtPayload = jwtData;
-                });
-                const context: IGraphQlContext = {
-                    user: jwtPayload,
-                };
-                return context;
-            },
-        });
-        graphQL.applyMiddleware({
-            app: this.express,
-            path: graphQLUriPath,
-        });
+        this.express.use(`${BASE_URL}/user`, userRouter);
     }
 }
 
