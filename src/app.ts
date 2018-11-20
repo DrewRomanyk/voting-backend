@@ -3,6 +3,7 @@ import * as express from "express";
 import * as logger from "morgan";
 import { Sequelize } from "sequelize-typescript";
 
+import categoryRouter from "./routes/category";
 import userRouter from "./routes/user";
 import { createModels } from "./db";
 
@@ -34,11 +35,17 @@ class App {
 
     private routes(): void {
         const BASE_URL = "/api";
-        this.express.get(BASE_URL, (_, res) =>
+        this.express.get("/", (_, res) =>
             res.status(200).send({
                 status: "Welcome to the Voting Backend!",
             }),
         );
+        this.express.get(BASE_URL, (_, res) =>
+            res.status(200).send({
+                status: "Welcome to the Voting Backend API!",
+            }),
+        );
+        this.express.use(`${BASE_URL}/category`, categoryRouter);
         this.express.use(`${BASE_URL}/user`, userRouter);
     }
 }

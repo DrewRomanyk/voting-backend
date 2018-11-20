@@ -1,5 +1,5 @@
 import * as Sequelize from "sequelize";
-import { Column, Model, PrimaryKey, Table, ForeignKey, CreatedAt, UpdatedAt } from "sequelize-typescript";
+import { Column, Model, PrimaryKey, Table, ForeignKey, CreatedAt, UpdatedAt, AllowNull } from "sequelize-typescript";
 
 import Candidate from "./candidate";
 import Issue from "./issue";
@@ -17,6 +17,7 @@ export default class Position extends Model<Position> {
     @ForeignKey(() => Issue)
     public issueId: string;
 
+    @AllowNull
     @ForeignKey(() => PositionSubmit)
     @Column(Sequelize.UUID)
     public activeSubmitId: string;

@@ -5,6 +5,7 @@ import { Column, Model, PrimaryKey, Table, Default,
 import Candidate from "./candidate";
 import Issue from "./issue";
 import User from "./user";
+import { ISubmitStatus } from "../utilities/models";
 
 @Table
 export default class PositionSubmit extends Model<PositionSubmit> {
@@ -32,7 +33,7 @@ export default class PositionSubmit extends Model<PositionSubmit> {
     public sourceUrl: string;
 
     @Column(Sequelize.INTEGER)
-    public submitStatus: number;
+    public submitStatus: ISubmitStatus;
 
     @ForeignKey(() => User)
     @Column(Sequelize.UUID)

@@ -2,7 +2,7 @@ import * as Sequelize from "sequelize";
 import { Column, Model, PrimaryKey, Table, IsUrl, Default,
     ForeignKey, CreatedAt, UpdatedAt } from "sequelize-typescript";
 
-import { ILocalizedStrings } from "./../utilities/models";
+import { ILocalizedStrings, ISubmitStatus } from "./../utilities/models";
 import Affiliation from "./affiliation";
 import Candidate from "./candidate";
 import User from "./user";
@@ -39,7 +39,7 @@ export default class CandidateSubmit extends Model<CandidateSubmit> {
     public websiteUrl: string;
 
     @Column(Sequelize.INTEGER)
-    public submitStatus: number;
+    public submitStatus: ISubmitStatus;
 
     @ForeignKey(() => User)
     @Column(Sequelize.UUID)
