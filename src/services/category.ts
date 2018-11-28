@@ -1,6 +1,6 @@
-import * as ajv from "ajv";
 import { Sequelize } from "sequelize-typescript";
 
+import ajv from "../utilities/localAjv";
 import Category from "../models/category";
 import { ILocalizedStrings, ISubmitStatus } from "../utilities/models";
 import CategorySubmit from "../models/categorySubmit";
@@ -10,10 +10,11 @@ export interface ISubmitCategory {
     submitUserId: string;
 }
 
-const createValidate = ajv({async: true, allErrors: true}).compile({
+const createValidate = ajv.compile({
     $async: true,
     type: "object",
     required: ["name", "submitUserId"],
+    additionalProperties: false,
     properties: {
         name: {
             type: "object",

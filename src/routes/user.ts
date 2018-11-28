@@ -17,6 +17,13 @@ router.post("/signup", (req, res) => {
         });
     })
     .catch((error) => {
+        if (error.ajv && error.validation) {
+            res.status(400).send({
+                status: "ERROR",
+                message: "Validation went wrong",
+                result: error,
+            });
+        }
         res.status(500).send({
             status: "ERROR",
             message: "Something went wrong",
@@ -40,6 +47,13 @@ router.post("/login", (req, res) => {
         });
     })
     .catch((error) => {
+        if (error.ajv && error.validation) {
+            res.status(400).send({
+                status: "ERROR",
+                message: "Validation went wrong",
+                result: error,
+            });
+        }
         res.status(500).send({
             status: "ERROR",
             message: "Something went wrong",

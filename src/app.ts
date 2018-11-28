@@ -1,5 +1,9 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
+import * as i18next from "i18next";
+import * as i18nextBackend from "i18next-node-fs-backend";
+import * as i18nextMiddleware from "i18next-express-middleware";
+
 import * as logger from "morgan";
 import { Sequelize } from "sequelize-typescript";
 
@@ -31,15 +35,25 @@ class App {
             );
             next();
         });
+        i18next.use(i18nextBackend).use(i18nextMiddleware.LanguageDetector).init({
+            backend: {
+                loadPath: __dirname + "/../locales/{{lng}}/{{ns}}.json",
+                addPath: __dirname + "/../locales/{{lng}}/{{ns}}.missing.json",
+            },
+            fallbackLng: "en",
+            preload: ["en", "es"],
+            saveMissing: true,
+        });
+        this.express.use(i18nextMiddleware.handle(i18next));
     }
 
     private routes(): void {
         const BASE_URL = "/api";
-        this.express.get("/", (_, res) =>
+        this.express.get("/", (req, res) => {
             res.status(200).send({
-                status: "Welcome to the Voting Backend!",
-            }),
-        );
+                status: req.t("base.welcome"),
+            });
+        });
         this.express.get(BASE_URL, (_, res) =>
             res.status(200).send({
                 status: "Welcome to the Voting Backend API!",

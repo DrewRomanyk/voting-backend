@@ -1,8 +1,8 @@
-import * as ajv from "ajv";
 import * as argon2 from "argon2";
 import * as crypto from "crypto";
 import * as jwt from "jsonwebtoken";
 
+import ajv from "../utilities/localAjv";
 import User from "../models/user";
 import config from "../config";
 
@@ -15,12 +15,14 @@ export interface ISignUpPayload {
     email: string;
     username: string;
     password: string;
+    passwordConfirm: string;
 }
 
-const signupValidate = ajv({async: true, allErrors: true}).compile({
+const signupValidate = ajv.compile({
     $async: true,
     type: "object",
-    required: ["email", "username", "password"],
+    required: ["email", "username", "password", "passwordConfirm"],
+    additionalProperties: false,
     properties: {
         email: {
             type: "string",
@@ -36,6 +38,11 @@ const signupValidate = ajv({async: true, allErrors: true}).compile({
             type: "string",
             minLength: 10,
             maxLength: 100,
+        },
+        passwordConfirm: {
+            const: {
+                $data: "/password",
+            },
         },
     },
 });
